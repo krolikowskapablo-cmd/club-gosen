@@ -1437,7 +1437,6 @@ html, body {
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword,
-
   signOut, onAuthStateChanged, updateProfile
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getFirestore, doc, getDoc, setDoc, updateDoc, collection,
@@ -1545,33 +1544,9 @@ onAuthStateChanged(auth, async (user) => {
   hideLoading();
 });
 
-async function loadUserData(user) {
-  const ref = doc(db, 'usuarios', user.uid);
-  const snap = await getDoc(ref);
-  if (snap.exists()) {
-    currentUserData = snap.data();
-  } else {
-    // New user → create with welcome points
-    const data = {
-      uid: user.uid, nombre: user.displayName || '',
-      email: user.email, fotoPerfil: user.photoURL || '',
-      puntos: 500, fechaRegistro: serverTimestamp(), rol: 'cliente'
-    };
-    await setDoc(ref, data);
-    currentUserData = data;
-    showToast('¡Bienvenido! +500 puntos de regalo 🎉', 'success');
-  }
-}
+// loadUserData definida en Fase 3
 
-function showApp() {
-  document.getElementById('auth-screen').classList.remove('active');
-  document.getElementById('bottom-nav').classList.add('visible');
-  navigateTo('home-screen');
-  loadHomeData();
-  checkPWA();
-  // Track visit
-  trackVisit();
-}
+// showApp definida en Fase 3
 
 function showAuth() {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
