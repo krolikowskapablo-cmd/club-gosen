@@ -1,0 +1,1720 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0a0a0a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Club Gosén">
+<meta name="description" content="Club Gosén — Ecosistema de beneficios exclusivos">
+<link rel="manifest" href="#" id="manifest-link">
+<title>Club Gosén</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --black: #0a0a0a;
+  --black-2: #111111;
+  --black-3: #1a1a1a;
+  --black-4: #222222;
+  --gray-1: #2a2a2a;
+  --gray-2: #3a3a3a;
+  --gray-3: #888888;
+  --gray-4: #aaaaaa;
+  --white: #f5f5f0;
+  --white-2: #e8e8e3;
+  --gold: #c9a84c;
+  --gold-light: #e8c97a;
+  --font-display: 'Cormorant Garamond', serif;
+  --font-body: 'DM Sans', sans-serif;
+  --radius-sm: 12px;
+  --radius-md: 18px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+  --shadow-sm: 0 2px 12px rgba(0,0,0,0.3);
+  --shadow-md: 0 8px 32px rgba(0,0,0,0.4);
+  --shadow-lg: 0 16px 48px rgba(0,0,0,0.5);
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---- SCROLLBAR ---- */
+::-webkit-scrollbar { width: 0; }
+
+/* ---- LOADING ---- */
+#loading-screen {
+  position: fixed; inset: 0; background: var(--black);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  z-index: 9999; transition: opacity 0.6s ease;
+}
+#loading-screen.hidden { opacity: 0; pointer-events: none; }
+.loading-logo {
+  font-family: var(--font-display);
+  font-size: 3rem; font-weight: 300; letter-spacing: 0.15em;
+  color: var(--white); margin-bottom: 0.3rem;
+}
+.loading-sub {
+  font-size: 0.7rem; letter-spacing: 0.35em; color: var(--gold);
+  text-transform: uppercase; margin-bottom: 2.5rem;
+}
+.loading-bar {
+  width: 120px; height: 1px; background: var(--gray-2);
+  position: relative; overflow: hidden;
+}
+.loading-bar::after {
+  content: ''; position: absolute; left: -100%; top: 0;
+  width: 100%; height: 100%; background: var(--gold);
+  animation: loadBar 1.8s ease infinite;
+}
+@keyframes loadBar { 0%{left:-100%} 100%{left:100%} }
+
+/* ---- APP WRAPPER ---- */
+#app { min-height: 100vh; padding-bottom: 90px; }
+
+/* ---- SCREENS ---- */
+.screen { display: none; min-height: 100vh; }
+.screen.active { display: block; }
+
+/* ---- AUTH SCREEN ---- */
+#auth-screen {
+  background: var(--black);
+  display: none; flex-direction: column;
+  min-height: 100vh; position: relative; overflow: hidden;
+}
+#auth-screen.active { display: flex; }
+
+.auth-bg {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 30% 20%, rgba(201,168,76,0.08) 0%, transparent 60%),
+              radial-gradient(ellipse at 80% 80%, rgba(201,168,76,0.05) 0%, transparent 50%);
+}
+.auth-noise {
+  position: absolute; inset: 0; opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+}
+
+.auth-content {
+  position: relative; z-index: 1;
+  flex: 1; display: flex; flex-direction: column;
+  padding: 60px 28px 40px;
+}
+.auth-header { margin-bottom: auto; padding-top: 40px; }
+.auth-eyebrow {
+  font-size: 0.65rem; letter-spacing: 0.4em; color: var(--gold);
+  text-transform: uppercase; margin-bottom: 1rem;
+  display: flex; align-items: center; gap: 10px;
+}
+.auth-eyebrow::before {
+  content: ''; width: 24px; height: 1px; background: var(--gold);
+}
+.auth-title {
+  font-family: var(--font-display);
+  font-size: 4.2rem; font-weight: 300; line-height: 1;
+  color: var(--white); letter-spacing: 0.02em;
+}
+.auth-title span { display: block; color: var(--gold); font-style: italic; }
+.auth-tagline {
+  margin-top: 1.2rem; font-size: 0.85rem; color: var(--gray-3);
+  letter-spacing: 0.05em; font-weight: 300; max-width: 260px;
+}
+
+.auth-form { margin-top: auto; padding-top: 40px; }
+.auth-tabs {
+  display: flex; gap: 0; margin-bottom: 28px;
+  border-bottom: 1px solid var(--gray-2);
+}
+.auth-tab {
+  flex: 1; padding: 10px 0; text-align: center;
+  font-size: 0.8rem; letter-spacing: 0.1em; color: var(--gray-3);
+  cursor: pointer; border-bottom: 2px solid transparent;
+  margin-bottom: -1px; transition: var(--transition);
+  text-transform: uppercase;
+}
+.auth-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+.auth-panel { display: none; }
+.auth-panel.active { display: block; }
+
+.input-group { margin-bottom: 16px; position: relative; }
+.input-group label {
+  display: block; font-size: 0.65rem; letter-spacing: 0.2em;
+  color: var(--gray-3); text-transform: uppercase; margin-bottom: 8px;
+}
+.input-group input {
+  width: 100%; padding: 14px 16px;
+  background: var(--black-3); border: 1px solid var(--gray-2);
+  border-radius: var(--radius-sm); color: var(--white);
+  font-family: var(--font-body); font-size: 0.9rem;
+  outline: none; transition: var(--transition);
+}
+.input-group input:focus { border-color: var(--gold); background: var(--black-4); }
+.input-group input::placeholder { color: var(--gray-2); }
+
+.btn-primary {
+  width: 100%; padding: 16px;
+  background: var(--white); color: var(--black);
+  border: none; border-radius: var(--radius-sm);
+  font-family: var(--font-body); font-size: 0.85rem;
+  font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+  cursor: pointer; transition: var(--transition);
+}
+.btn-primary:active { transform: scale(0.98); opacity: 0.9; }
+
+.divider {
+  display: flex; align-items: center; gap: 12px;
+  margin: 20px 0; color: var(--gray-3); font-size: 0.75rem;
+}
+.divider::before, .divider::after {
+  content: ''; flex: 1; height: 1px; background: var(--gray-2);
+}
+
+.btn-google {
+  width: 100%; padding: 14px 16px;
+  background: transparent; border: 1px solid var(--gray-2);
+  border-radius: var(--radius-sm); color: var(--white);
+  font-family: var(--font-body); font-size: 0.85rem;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  gap: 10px; transition: var(--transition);
+}
+.btn-google:active { background: var(--black-3); }
+.btn-google svg { width: 18px; height: 18px; }
+
+.auth-error {
+  color: #ff6b6b; font-size: 0.78rem; text-align: center;
+  margin-top: 12px; min-height: 18px;
+}
+
+/* ---- BOTTOM NAV ---- */
+#bottom-nav {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: rgba(10,10,10,0.95); backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--gray-2);
+  display: none; z-index: 100;
+  padding: 8px 0 env(safe-area-inset-bottom, 8px);
+}
+#bottom-nav.visible { display: flex; }
+.nav-items { display: flex; width: 100%; }
+.nav-item {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  padding: 8px 4px; cursor: pointer; transition: var(--transition);
+  position: relative;
+}
+.nav-item svg { width: 22px; height: 22px; stroke: var(--gray-3); transition: var(--transition); }
+.nav-item span {
+  font-size: 0.58rem; letter-spacing: 0.08em; color: var(--gray-3);
+  margin-top: 3px; text-transform: uppercase; transition: var(--transition);
+}
+.nav-item.active svg { stroke: var(--gold); }
+.nav-item.active span { color: var(--gold); }
+.nav-dot {
+  position: absolute; top: 6px; right: calc(50% - 16px);
+  width: 5px; height: 5px; background: var(--gold);
+  border-radius: 50%; display: none;
+}
+
+/* ---- TOP BAR ---- */
+.top-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 56px 24px 20px;
+}
+.top-bar-logo {
+  font-family: var(--font-display);
+  font-size: 1.5rem; font-weight: 400; letter-spacing: 0.1em;
+  color: var(--white);
+}
+.top-bar-logo span { color: var(--gold); }
+.avatar-btn {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: var(--gray-1); border: 1px solid var(--gray-2);
+  overflow: hidden; cursor: pointer; display: flex; align-items: center;
+  justify-content: center; flex-shrink: 0;
+}
+.avatar-btn img { width: 100%; height: 100%; object-fit: cover; }
+.avatar-btn svg { width: 20px; height: 20px; stroke: var(--gray-3); }
+
+/* ---- HOME SCREEN ---- */
+#home-screen { background: var(--black); }
+
+.greeting-section { padding: 0 24px 8px; }
+.greeting-text {
+  font-family: var(--font-display);
+  font-size: 2rem; font-weight: 300; color: var(--white);
+  letter-spacing: 0.02em;
+}
+.greeting-sub {
+  font-size: 0.78rem; color: var(--gray-3); margin-top: 2px;
+  letter-spacing: 0.05em;
+}
+
+/* Points Card */
+.points-card {
+  margin: 20px 24px;
+  background: linear-gradient(135deg, var(--black-3) 0%, var(--black-4) 100%);
+  border: 1px solid rgba(201,168,76,0.25);
+  border-radius: var(--radius-xl); padding: 28px;
+  position: relative; overflow: hidden;
+}
+.points-card::before {
+  content: ''; position: absolute;
+  top: -40px; right: -40px; width: 160px; height: 160px;
+  background: radial-gradient(circle, rgba(201,168,76,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+.points-card::after {
+  content: 'G'; position: absolute;
+  bottom: -20px; right: 20px;
+  font-family: var(--font-display); font-size: 8rem; font-weight: 300;
+  color: rgba(201,168,76,0.06); line-height: 1; pointer-events: none;
+}
+.points-label {
+  font-size: 0.65rem; letter-spacing: 0.3em; color: var(--gold);
+  text-transform: uppercase; margin-bottom: 8px;
+}
+.points-value {
+  font-family: var(--font-display);
+  font-size: 3.5rem; font-weight: 300; color: var(--white);
+  line-height: 1; letter-spacing: -0.01em;
+}
+.points-value span { font-size: 1.2rem; color: var(--gray-3); margin-left: 4px; }
+.points-actions {
+  display: flex; gap: 10px; margin-top: 20px;
+}
+.points-action-btn {
+  flex: 1; padding: 10px 8px; text-align: center;
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-sm);
+  font-size: 0.7rem; letter-spacing: 0.1em; color: var(--white-2);
+  text-transform: uppercase; cursor: pointer; transition: var(--transition);
+}
+.points-action-btn:active { background: rgba(255,255,255,0.1); }
+
+/* Section Headers */
+.section-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px; margin-bottom: 16px; margin-top: 32px;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: 1.6rem; font-weight: 400; color: var(--white);
+  letter-spacing: 0.02em;
+}
+.section-link {
+  font-size: 0.7rem; letter-spacing: 0.1em; color: var(--gold);
+  text-transform: uppercase; cursor: pointer;
+}
+
+/* Businesses */
+.businesses-scroll {
+  padding: 0 24px; display: flex; flex-direction: column; gap: 16px;
+}
+.business-card {
+  background: var(--black-2);
+  border: 1px solid var(--gray-2);
+  border-radius: var(--radius-lg); overflow: hidden;
+  cursor: pointer; transition: var(--transition);
+  animation: fadeUp 0.5s ease both;
+}
+.business-card:active { transform: scale(0.98); }
+.business-cover {
+  width: 100%; height: 160px; object-fit: cover;
+  background: var(--black-3); display: block;
+  position: relative;
+}
+.business-cover-placeholder {
+  width: 100%; height: 160px;
+  background: linear-gradient(135deg, var(--black-3), var(--gray-1));
+  display: flex; align-items: center; justify-content: center;
+}
+.business-cover-placeholder span {
+  font-family: var(--font-display); font-size: 3rem; color: var(--gray-2);
+}
+.business-info { padding: 18px 20px; }
+.business-category {
+  font-size: 0.62rem; letter-spacing: 0.25em; color: var(--gold);
+  text-transform: uppercase; margin-bottom: 6px;
+}
+.business-name {
+  font-family: var(--font-display);
+  font-size: 1.5rem; font-weight: 400; color: var(--white);
+  letter-spacing: 0.02em; margin-bottom: 6px;
+}
+.business-desc {
+  font-size: 0.8rem; color: var(--gray-3); line-height: 1.5;
+  margin-bottom: 14px; display: -webkit-box;
+  -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.btn-outline {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 9px 18px; border: 1px solid var(--gray-2);
+  border-radius: 100px; font-size: 0.72rem; color: var(--white);
+  letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer;
+  transition: var(--transition); background: transparent;
+}
+.btn-outline:active { border-color: var(--gold); color: var(--gold); }
+.btn-outline svg { width: 14px; height: 14px; }
+
+/* Benefits Preview */
+.benefits-scroll {
+  padding: 0 24px; display: flex; gap: 12px; overflow-x: auto;
+  scrollbar-width: none; -ms-overflow-style: none; padding-bottom: 4px;
+}
+.benefit-card-mini {
+  flex-shrink: 0; width: 180px;
+  background: var(--black-2); border: 1px solid var(--gray-2);
+  border-radius: var(--radius-md); padding: 18px 16px;
+  cursor: pointer; transition: var(--transition);
+}
+.benefit-card-mini:active { transform: scale(0.97); border-color: var(--gold); }
+.benefit-points {
+  font-family: var(--font-display); font-size: 1.8rem;
+  color: var(--gold); font-weight: 300; line-height: 1;
+  margin-bottom: 4px;
+}
+.benefit-pts-label {
+  font-size: 0.6rem; letter-spacing: 0.2em; color: var(--gray-3);
+  text-transform: uppercase; margin-bottom: 10px;
+}
+.benefit-name {
+  font-size: 0.85rem; color: var(--white); line-height: 1.3;
+  font-weight: 400;
+}
+.benefit-business {
+  font-size: 0.65rem; color: var(--gray-3); margin-top: 4px;
+}
+
+/* Quick Access */
+.quick-access {
+  padding: 0 24px; display: grid; grid-template-columns: 1fr 1fr;
+  gap: 12px; margin-top: 32px;
+}
+.quick-card {
+  background: var(--black-2); border: 1px solid var(--gray-2);
+  border-radius: var(--radius-md); padding: 22px 18px;
+  cursor: pointer; transition: var(--transition);
+}
+.quick-card:active { border-color: var(--gold); transform: scale(0.97); }
+.quick-card svg { width: 24px; height: 24px; stroke: var(--gold); margin-bottom: 12px; }
+.quick-card-title {
+  font-size: 0.85rem; font-weight: 500; color: var(--white);
+  margin-bottom: 4px;
+}
+.quick-card-sub { font-size: 0.72rem; color: var(--gray-3); }
+
+/* Events */
+.events-scroll {
+  padding: 0 24px; display: flex; gap: 14px; overflow-x: auto;
+  scrollbar-width: none; padding-bottom: 4px;
+}
+.event-card {
+  flex-shrink: 0; width: 260px;
+  background: var(--black-2); border: 1px solid var(--gray-2);
+  border-radius: var(--radius-md); overflow: hidden;
+  cursor: pointer; transition: var(--transition);
+}
+.event-card:active { transform: scale(0.97); }
+.event-img {
+  width: 100%; height: 120px; object-fit: cover;
+  background: var(--black-3);
+}
+.event-img-placeholder {
+  width: 100%; height: 120px;
+  background: linear-gradient(135deg, var(--black-3), var(--gray-1));
+  display: flex; align-items: center; justify-content: center;
+}
+.event-img-placeholder span { font-size: 2rem; }
+.event-info { padding: 14px; }
+.event-date { font-size: 0.65rem; color: var(--gold); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 4px; }
+.event-title { font-size: 0.9rem; color: var(--white); font-weight: 500; }
+
+/* ---- BUSINESS DETAIL ---- */
+#business-screen { background: var(--black); }
+.back-btn {
+  position: fixed; top: 52px; left: 20px; z-index: 50;
+  width: 40px; height: 40px; border-radius: 50%;
+  background: rgba(10,10,10,0.8); backdrop-filter: blur(10px);
+  border: 1px solid var(--gray-2);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: var(--transition);
+}
+.back-btn svg { width: 20px; height: 20px; stroke: var(--white); }
+
+.business-detail-cover {
+  width: 100%; height: 280px; object-fit: cover;
+  background: var(--black-3); display: block;
+}
+.business-detail-cover-placeholder {
+  width: 100%; height: 280px;
+  background: linear-gradient(180deg, var(--black-3), var(--black-2));
+  display: flex; align-items: center; justify-content: center;
+}
+
+.business-detail-content { padding: 24px; }
+.business-detail-header { margin-bottom: 24px; }
+.business-detail-category {
+  font-size: 0.65rem; letter-spacing: 0.3em; color: var(--gold);
+  text-transform: uppercase; margin-bottom: 8px;
+}
+.business-detail-name {
+  font-family: var(--font-display);
+  font-size: 2.8rem; font-weight: 300; color: var(--white);
+  letter-spacing: 0.02em; line-height: 1.1; margin-bottom: 12px;
+}
+.business-detail-desc { font-size: 0.88rem; color: var(--gray-3); line-height: 1.7; }
+
+.detail-section { margin-bottom: 28px; }
+.detail-section-title {
+  font-size: 0.65rem; letter-spacing: 0.25em; color: var(--gray-3);
+  text-transform: uppercase; margin-bottom: 14px;
+  padding-bottom: 8px; border-bottom: 1px solid var(--gray-2);
+}
+
+.schedule-grid { display: flex; flex-direction: column; gap: 6px; }
+.schedule-row {
+  display: flex; justify-content: space-between;
+  font-size: 0.82rem;
+}
+.schedule-day { color: var(--gray-3); }
+.schedule-hours { color: var(--white); }
+
+.promo-badge {
+  display: inline-block; padding: 8px 14px;
+  background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.3);
+  border-radius: 100px; font-size: 0.78rem; color: var(--gold-light);
+  margin-bottom: 8px;
+}
+
+.btn-whatsapp {
+  width: 100%; padding: 18px;
+  background: #128C7E; border: none; border-radius: var(--radius-md);
+  color: white; font-family: var(--font-body); font-size: 0.85rem;
+  font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  gap: 10px; transition: var(--transition); margin-top: 8px;
+}
+.btn-whatsapp:active { transform: scale(0.98); opacity: 0.9; }
+.btn-whatsapp svg { width: 22px; height: 22px; }
+
+/* Gallery */
+.gallery-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.gallery-item {
+  aspect-ratio: 1; border-radius: var(--radius-sm);
+  overflow: hidden; background: var(--black-3);
+}
+.gallery-item img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Business Benefits */
+.business-benefit-item {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 0; border-bottom: 1px solid var(--gray-2);
+}
+.business-benefit-item:last-child { border-bottom: none; }
+.benefit-points-badge {
+  font-family: var(--font-display); font-size: 1.5rem;
+  color: var(--gold); font-weight: 300; min-width: 60px; text-align: right;
+}
+.benefit-info { flex: 1; }
+.benefit-info-title { font-size: 0.88rem; color: var(--white); margin-bottom: 2px; }
+.benefit-info-sub { font-size: 0.72rem; color: var(--gray-3); }
+.btn-canjear {
+  padding: 8px 16px; background: transparent;
+  border: 1px solid var(--gold); border-radius: 100px;
+  color: var(--gold); font-size: 0.7rem; letter-spacing: 0.1em;
+  text-transform: uppercase; cursor: pointer; transition: var(--transition);
+  white-space: nowrap;
+}
+.btn-canjear:active { background: var(--gold); color: var(--black); }
+
+/* ---- BENEFITS SCREEN ---- */
+#benefits-screen { background: var(--black); padding-top: 56px; }
+.benefits-list { padding: 0 24px; display: flex; flex-direction: column; gap: 14px; }
+.benefit-full-card {
+  background: var(--black-2); border: 1px solid var(--gray-2);
+  border-radius: var(--radius-md); padding: 20px;
+  display: flex; align-items: center; gap: 16px;
+  cursor: pointer; transition: var(--transition);
+}
+.benefit-full-card:active { border-color: var(--gold); transform: scale(0.99); }
+.benefit-icon-wrap {
+  width: 56px; height: 56px; border-radius: var(--radius-sm);
+  background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.2);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.benefit-icon-wrap span { font-size: 1.5rem; }
+.benefit-full-info { flex: 1; }
+.benefit-full-name { font-size: 0.95rem; color: var(--white); font-weight: 500; margin-bottom: 3px; }
+.benefit-full-biz { font-size: 0.72rem; color: var(--gray-3); margin-bottom: 6px; }
+.benefit-full-pts {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 0.72rem; color: var(--gold); letter-spacing: 0.05em;
+}
+.benefit-cta { flex-shrink: 0; }
+
+/* ---- CANJES SCREEN ---- */
+#canjes-screen { background: var(--black); padding-top: 56px; }
+.canjes-list { padding: 0 24px; display: flex; flex-direction: column; gap: 12px; }
+.canje-card {
+  background: var(--black-2); border: 1px solid var(--gray-2);
+  border-radius: var(--radius-md); padding: 18px 20px;
+}
+.canje-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+.canje-name { font-size: 0.9rem; color: var(--white); font-weight: 500; }
+.canje-status {
+  font-size: 0.6rem; padding: 4px 10px; border-radius: 100px;
+  letter-spacing: 0.1em; text-transform: uppercase;
+}
+.status-activo { background: rgba(74,222,128,0.1); color: #4ade80; border: 1px solid rgba(74,222,128,0.2); }
+.status-usado { background: rgba(156,163,175,0.1); color: #9ca3af; border: 1px solid rgba(156,163,175,0.2); }
+.status-vencido { background: rgba(248,113,113,0.1); color: #f87171; border: 1px solid rgba(248,113,113,0.2); }
+.canje-code {
+  font-family: 'Courier New', monospace; font-size: 1.1rem;
+  color: var(--gold); letter-spacing: 0.2em; margin-bottom: 6px;
+}
+.canje-meta { font-size: 0.72rem; color: var(--gray-3); }
+
+.empty-state {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 60px 24px; text-align: center;
+}
+.empty-state svg { width: 48px; height: 48px; stroke: var(--gray-2); margin-bottom: 16px; }
+.empty-state h3 { font-family: var(--font-display); font-size: 1.5rem; color: var(--gray-3); margin-bottom: 8px; }
+.empty-state p { font-size: 0.82rem; color: var(--gray-2); }
+
+/* ---- PROFILE SCREEN ---- */
+#profile-screen { background: var(--black); }
+.profile-header {
+  padding: 56px 24px 32px;
+  background: linear-gradient(180deg, var(--black-2) 0%, var(--black) 100%);
+  text-align: center;
+}
+.profile-avatar {
+  width: 80px; height: 80px; border-radius: 50%;
+  margin: 0 auto 16px; overflow: hidden;
+  border: 2px solid rgba(201,168,76,0.3);
+  background: var(--gray-1); display: flex; align-items: center; justify-content: center;
+}
+.profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.profile-avatar svg { width: 36px; height: 36px; stroke: var(--gray-3); }
+.profile-name {
+  font-family: var(--font-display); font-size: 1.8rem;
+  color: var(--white); font-weight: 300; margin-bottom: 4px;
+}
+.profile-email { font-size: 0.8rem; color: var(--gray-3); }
+.profile-points-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-top: 12px; padding: 6px 16px;
+  background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.3);
+  border-radius: 100px; font-size: 0.78rem; color: var(--gold);
+}
+
+.profile-menu { padding: 24px; }
+.profile-menu-item {
+  display: flex; align-items: center; gap: 14px;
+  padding: 16px 0; border-bottom: 1px solid var(--gray-2);
+  cursor: pointer; transition: var(--transition);
+}
+.profile-menu-item:last-child { border-bottom: none; }
+.profile-menu-item:active { opacity: 0.7; }
+.profile-menu-item svg { width: 20px; height: 20px; stroke: var(--gray-3); flex-shrink: 0; }
+.profile-menu-label { flex: 1; font-size: 0.88rem; color: var(--white); }
+.profile-menu-arrow { width: 16px; height: 16px; stroke: var(--gray-2); }
+
+.btn-logout {
+  margin: 24px; width: calc(100% - 48px); padding: 14px;
+  background: transparent; border: 1px solid var(--gray-2);
+  border-radius: var(--radius-sm); color: var(--gray-3);
+  font-family: var(--font-body); font-size: 0.82rem;
+  letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer;
+  transition: var(--transition);
+}
+.btn-logout:active { border-color: #f87171; color: #f87171; }
+
+/* ---- MODAL ---- */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  z-index: 200; display: flex; align-items: flex-end;
+  opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal-sheet {
+  width: 100%; background: var(--black-2);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  padding: 0 0 env(safe-area-inset-bottom, 24px);
+  transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  max-height: 85vh; overflow-y: auto;
+}
+.modal-overlay.open .modal-sheet { transform: translateY(0); }
+.modal-handle {
+  width: 36px; height: 4px; background: var(--gray-2);
+  border-radius: 2px; margin: 14px auto 20px;
+}
+.modal-content { padding: 0 24px 24px; }
+.modal-title {
+  font-family: var(--font-display); font-size: 2rem;
+  color: var(--white); font-weight: 300; margin-bottom: 8px;
+}
+.modal-sub { font-size: 0.82rem; color: var(--gray-3); margin-bottom: 24px; }
+
+.code-display {
+  background: var(--black); border: 1px solid rgba(201,168,76,0.3);
+  border-radius: var(--radius-md); padding: 28px;
+  text-align: center; margin-bottom: 20px;
+}
+.code-value {
+  font-family: 'Courier New', monospace; font-size: 2.2rem;
+  color: var(--gold); letter-spacing: 0.3em; font-weight: 400;
+}
+.code-expires {
+  font-size: 0.7rem; color: var(--gray-3); margin-top: 8px; letter-spacing: 0.1em;
+}
+
+/* ---- PWA BANNER ---- */
+#pwa-banner {
+  position: fixed; bottom: 90px; left: 12px; right: 12px;
+  background: var(--black-2); border: 1px solid rgba(201,168,76,0.3);
+  border-radius: var(--radius-md); padding: 16px 18px;
+  display: none; z-index: 150; box-shadow: var(--shadow-lg);
+  animation: slideUp 0.4s ease;
+}
+#pwa-banner.show { display: flex; align-items: center; gap: 14px; }
+.pwa-icon {
+  width: 44px; height: 44px; border-radius: 10px;
+  background: var(--black); border: 1px solid var(--gray-2);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; font-family: var(--font-display); font-size: 1.2rem;
+  color: var(--gold);
+}
+.pwa-text { flex: 1; }
+.pwa-text strong { display: block; font-size: 0.82rem; color: var(--white); margin-bottom: 2px; }
+.pwa-text span { font-size: 0.72rem; color: var(--gray-3); }
+.pwa-install-btn {
+  padding: 8px 14px; background: var(--gold); border: none;
+  border-radius: var(--radius-sm); color: var(--black);
+  font-size: 0.72rem; font-weight: 500; letter-spacing: 0.05em;
+  cursor: pointer; white-space: nowrap;
+}
+.pwa-close {
+  width: 24px; height: 24px; background: transparent; border: none;
+  color: var(--gray-3); font-size: 1.2rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* iOS PWA Instructions */
+#ios-banner {
+  position: fixed; bottom: 90px; left: 12px; right: 12px;
+  background: var(--black-2); border: 1px solid rgba(201,168,76,0.3);
+  border-radius: var(--radius-md); padding: 20px;
+  display: none; z-index: 150; box-shadow: var(--shadow-lg);
+}
+#ios-banner.show { display: block; }
+.ios-banner-title {
+  font-size: 0.82rem; font-weight: 500; color: var(--white);
+  margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+}
+.ios-steps { display: flex; flex-direction: column; gap: 8px; }
+.ios-step { display: flex; align-items: center; gap: 10px; font-size: 0.78rem; color: var(--gray-3); }
+.ios-step-num {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: rgba(201,168,76,0.15); border: 1px solid rgba(201,168,76,0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.65rem; color: var(--gold); flex-shrink: 0;
+}
+.ios-close {
+  position: absolute; top: 14px; right: 14px;
+  background: transparent; border: none; color: var(--gray-3);
+  font-size: 1.1rem; cursor: pointer;
+}
+
+/* ---- TOAST ---- */
+.toast {
+  position: fixed; top: 60px; left: 50%; transform: translateX(-50%);
+  background: var(--black-2); border: 1px solid var(--gray-2);
+  border-radius: 100px; padding: 10px 20px;
+  font-size: 0.8rem; color: var(--white);
+  z-index: 300; opacity: 0; pointer-events: none;
+  transition: opacity 0.3s ease; white-space: nowrap;
+  box-shadow: var(--shadow-md);
+}
+.toast.show { opacity: 1; }
+.toast.success { border-color: rgba(74,222,128,0.4); color: #4ade80; }
+.toast.error { border-color: rgba(248,113,113,0.4); color: #f87171; }
+
+/* ---- ANIMATIONS ---- */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* ---- EVENTS SCREEN ---- */
+#events-screen { background: var(--black); padding-top: 56px; }
+.events-list { padding: 0 24px; display: flex; flex-direction: column; gap: 16px; }
+.event-full-card {
+  background: var(--black-2); border: 1px solid var(--gray-2);
+  border-radius: var(--radius-md); overflow: hidden;
+  cursor: pointer; transition: var(--transition);
+}
+.event-full-card:active { transform: scale(0.99); }
+.event-full-img { width: 100%; height: 180px; object-fit: cover; background: var(--black-3); }
+.event-full-img-placeholder {
+  width: 100%; height: 180px;
+  background: linear-gradient(135deg, var(--black-3), var(--gray-1));
+  display: flex; align-items: center; justify-content: center; font-size: 3rem;
+}
+.event-full-info { padding: 18px 20px; }
+.event-full-date { font-size: 0.65rem; color: var(--gold); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 6px; }
+.event-full-title { font-family: var(--font-display); font-size: 1.4rem; color: var(--white); margin-bottom: 8px; }
+.event-full-desc { font-size: 0.82rem; color: var(--gray-3); line-height: 1.6; }
+
+/* Spinner */
+.spinner {
+  width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.2);
+  border-top-color: var(--white); border-radius: 50%;
+  animation: spin 0.8s linear infinite; display: inline-block;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Screen page title */
+.screen-page-title {
+  font-family: var(--font-display); font-size: 2.2rem;
+  font-weight: 300; color: var(--white); padding: 0 24px 20px;
+  letter-spacing: 0.02em;
+}
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="loading-screen">
+  <div class="loading-logo">Gosén</div>
+  <div class="loading-sub">Club de beneficios</div>
+  <div class="loading-bar"></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- PWA BANNERS -->
+<div id="pwa-banner">
+  <div class="pwa-icon">G</div>
+  <div class="pwa-text">
+    <strong>Instalar Club Gosén</strong>
+    <span>Accedé más rápido desde tu pantalla</span>
+  </div>
+  <button class="pwa-install-btn" id="pwa-install-btn">Instalar</button>
+  <button class="pwa-close" id="pwa-close">×</button>
+</div>
+
+<div id="ios-banner" style="position:fixed;bottom:90px;left:12px;right:12px;">
+  <button class="ios-close" id="ios-close">×</button>
+  <div class="ios-banner-title">📲 Instalar Club Gosén</div>
+  <div class="ios-steps">
+    <div class="ios-step"><div class="ios-step-num">1</div>Tocá el botón compartir <strong style="color:var(--white)">⬆</strong> en Safari</div>
+    <div class="ios-step"><div class="ios-step-num">2</div>Seleccioná <strong style="color:var(--white)">"Agregar a pantalla de inicio"</strong></div>
+    <div class="ios-step"><div class="ios-step-num">3</div>Tocá <strong style="color:var(--white)">"Agregar"</strong> y listo</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+
+  <!-- AUTH SCREEN -->
+  <div id="auth-screen" class="screen">
+    <div class="auth-bg"></div>
+    <div class="auth-noise"></div>
+    <div class="auth-content">
+      <div class="auth-header">
+        <div class="auth-eyebrow">Bienvenido</div>
+        <div class="auth-title">Club<span>Gosén</span></div>
+        <div class="auth-tagline">Beneficios exclusivos para quienes eligen Gosén.</div>
+      </div>
+      <div class="auth-form">
+        <div class="auth-tabs">
+          <div class="auth-tab active" data-tab="login">Ingresar</div>
+          <div class="auth-tab" data-tab="register">Registrarse</div>
+        </div>
+        <!-- LOGIN -->
+        <div class="auth-panel active" id="panel-login">
+          <div class="input-group">
+            <label>Email</label>
+            <input type="email" id="login-email" placeholder="tu@email.com" autocomplete="email">
+          </div>
+          <div class="input-group">
+            <label>Contraseña</label>
+            <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password">
+          </div>
+          <button class="btn-primary" id="btn-login">Ingresar</button>
+          <div class="divider">o</div>
+          <button class="btn-google" id="btn-google-login">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+            Continuar con Google
+          </button>
+          <div class="auth-error" id="login-error"></div>
+        </div>
+        <!-- REGISTER -->
+        <div class="auth-panel" id="panel-register">
+          <div class="input-group">
+            <label>Nombre completo</label>
+            <input type="text" id="reg-name" placeholder="Tu nombre" autocomplete="name">
+          </div>
+          <div class="input-group">
+            <label>Email</label>
+            <input type="email" id="reg-email" placeholder="tu@email.com" autocomplete="email">
+          </div>
+          <div class="input-group">
+            <label>Contraseña</label>
+            <input type="password" id="reg-pass" placeholder="Mínimo 6 caracteres" autocomplete="new-password">
+          </div>
+          <button class="btn-primary" id="btn-register">Crear cuenta</button>
+          <div class="divider">o</div>
+          <button class="btn-google" id="btn-google-register">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+            Continuar con Google
+          </button>
+          <div class="auth-error" id="register-error"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOME SCREEN -->
+  <div id="home-screen" class="screen">
+    <div class="top-bar">
+      <div class="top-bar-logo">Club <span>Gosén</span></div>
+      <div class="avatar-btn" id="avatar-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      </div>
+    </div>
+
+    <div class="greeting-section">
+      <div class="greeting-text" id="greeting-text">Hola 👋</div>
+      <div class="greeting-sub">Tus beneficios exclusivos te esperan</div>
+    </div>
+
+    <div class="points-card">
+      <div class="points-label">Tus puntos</div>
+      <div class="points-value" id="home-points">0<span>pts</span></div>
+      <div class="points-actions">
+        <div class="points-action-btn" onclick="navigateTo('benefits-screen')">Ver beneficios</div>
+        <div class="points-action-btn" onclick="navigateTo('canjes-screen')">Mis canjes</div>
+      </div>
+    </div>
+
+    <div class="section-header">
+      <div class="section-title">Negocios</div>
+    </div>
+    <div class="businesses-scroll" id="businesses-list">
+      <div style="padding:20px;text-align:center;color:var(--gray-3)"><div class="spinner"></div></div>
+    </div>
+
+    <div class="section-header">
+      <div class="section-title">Beneficios</div>
+      <div class="section-link" onclick="navigateTo('benefits-screen')">Ver todos</div>
+    </div>
+    <div class="benefits-scroll" id="benefits-preview">
+      <div style="padding:20px;color:var(--gray-3);font-size:0.8rem">Cargando...</div>
+    </div>
+
+    <div class="section-header">
+      <div class="section-title">Eventos</div>
+    </div>
+    <div class="events-scroll" id="events-preview">
+      <div style="padding:20px;color:var(--gray-3);font-size:0.8rem">Cargando...</div>
+    </div>
+
+    <div class="quick-access">
+      <div class="quick-card" onclick="navigateTo('benefits-screen')">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <div class="quick-card-title">Beneficios</div>
+        <div class="quick-card-sub">Canjeá tus puntos</div>
+      </div>
+      <div class="quick-card" onclick="navigateTo('canjes-screen')">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12h8M12 8v8"/></svg>
+        <div class="quick-card-title">Mis canjes</div>
+        <div class="quick-card-sub">Historial completo</div>
+      </div>
+      <div class="quick-card" onclick="navigateTo('events-screen')">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        <div class="quick-card-title">Eventos</div>
+        <div class="quick-card-sub">Próximas fechas</div>
+      </div>
+      <div class="quick-card" onclick="navigateTo('profile-screen')">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        <div class="quick-card-title">Mi perfil</div>
+        <div class="quick-card-sub">Cuenta y datos</div>
+      </div>
+    </div>
+
+    <div style="height:20px"></div>
+  </div>
+
+  <!-- BUSINESS DETAIL SCREEN -->
+  <div id="business-screen" class="screen">
+    <div class="back-btn" onclick="goBack()">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    </div>
+    <div id="business-detail-content"></div>
+  </div>
+
+  <!-- BENEFITS SCREEN -->
+  <div id="benefits-screen" class="screen">
+    <div class="top-bar">
+      <div class="top-bar-logo">Beneficios</div>
+      <div style="font-size:0.72rem;color:var(--gold)" id="user-pts-header"></div>
+    </div>
+    <div class="benefits-list" id="benefits-full-list">
+      <div style="padding:20px;text-align:center"><div class="spinner"></div></div>
+    </div>
+    <div style="height:20px"></div>
+  </div>
+
+  <!-- CANJES SCREEN -->
+  <div id="canjes-screen" class="screen">
+    <div class="top-bar">
+      <div class="top-bar-logo">Mis Canjes</div>
+    </div>
+    <div class="canjes-list" id="canjes-list">
+      <div style="padding:20px;text-align:center"><div class="spinner"></div></div>
+    </div>
+    <div style="height:20px"></div>
+  </div>
+
+  <!-- EVENTS SCREEN -->
+  <div id="events-screen" class="screen">
+    <div class="top-bar">
+      <div class="top-bar-logo">Eventos</div>
+    </div>
+    <div class="events-list" id="events-full-list">
+      <div style="padding:20px;text-align:center"><div class="spinner"></div></div>
+    </div>
+    <div style="height:20px"></div>
+  </div>
+
+  <!-- PROFILE SCREEN -->
+  <div id="profile-screen" class="screen">
+    <div class="profile-header">
+      <div class="profile-avatar" id="profile-avatar">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      </div>
+      <div class="profile-name" id="profile-name">—</div>
+      <div class="profile-email" id="profile-email">—</div>
+      <div class="profile-points-chip">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <span id="profile-points-chip">0 puntos</span>
+      </div>
+    </div>
+    <div class="profile-menu">
+      <div class="profile-menu-item" onclick="navigateTo('canjes-screen')">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 12l2 2 4-4"/></svg>
+        <div class="profile-menu-label">Mis canjes</div>
+        <svg class="profile-menu-arrow" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M9 18l6-6-6-6"/></svg>
+      </div>
+      <div class="profile-menu-item" onclick="navigateTo('benefits-screen')">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <div class="profile-menu-label">Beneficios disponibles</div>
+        <svg class="profile-menu-arrow" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M9 18l6-6-6-6"/></svg>
+      </div>
+      <div class="profile-menu-item" onclick="navigateTo('events-screen')">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        <div class="profile-menu-label">Eventos</div>
+        <svg class="profile-menu-arrow" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M9 18l6-6-6-6"/></svg>
+      </div>
+    </div>
+    <button class="btn-logout" id="btn-logout">Cerrar sesión</button>
+    <div style="height:20px"></div>
+  </div>
+
+</div><!-- end app -->
+
+<!-- BOTTOM NAV -->
+<div id="bottom-nav">
+  <div class="nav-items">
+    <div class="nav-item active" data-screen="home-screen" onclick="navigateTo('home-screen')">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M3 12l9-9 9 9M5 10v10a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1V10"/></svg>
+      <span>Inicio</span>
+    </div>
+    <div class="nav-item" data-screen="benefits-screen" onclick="navigateTo('benefits-screen')">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      <span>Beneficios</span>
+    </div>
+    <div class="nav-item" data-screen="canjes-screen" onclick="navigateTo('canjes-screen')">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 12l2 2 4-4"/></svg>
+      <span>Canjes</span>
+    </div>
+    <div class="nav-item" data-screen="profile-screen" onclick="navigateTo('profile-screen')">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      <span>Perfil</span>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-content" id="modal-content"></div>
+  </div>
+</div>
+
+<!-- FIREBASE -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword,
+  signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged, updateProfile
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, collection,
+  getDocs, addDoc, query, where, orderBy, increment, serverTimestamp, Timestamp
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAW06EGO8kOr0zLt9AEHAPXGoSEFo5nPSk",
+  authDomain: "club-gosen.firebaseapp.com",
+  projectId: "club-gosen",
+  storageBucket: "club-gosen.firebasestorage.app",
+  messagingSenderId: "430240337905",
+  appId: "1:430240337905:web:787eeb8bc67088d3dabe50"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const googleProvider = new GoogleAuthProvider();
+
+// ---- STATE ----
+let currentUser = null;
+let currentUserData = null;
+let screenHistory = [];
+
+// ---- UTILS ----
+window.showToast = function(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast show ' + type;
+  setTimeout(() => { t.className = 'toast'; }, 3000);
+};
+
+window.navigateTo = function(screenId) {
+  const current = document.querySelector('.screen.active');
+  if (current && current.id !== screenId) {
+    screenHistory.push(current.id);
+    current.classList.remove('active');
+  }
+  const next = document.getElementById(screenId);
+  if (next) {
+    next.classList.add('active');
+    next.scrollTop = 0;
+    window.scrollTo(0, 0);
+  }
+  // Update nav
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.classList.toggle('active', item.dataset.screen === screenId);
+  });
+  // Load data for screen
+  if (screenId === 'benefits-screen') loadBenefitsFull();
+  if (screenId === 'canjes-screen') loadCanjes();
+  if (screenId === 'events-screen') loadEventsFull();
+  if (screenId === 'profile-screen') loadProfile();
+};
+
+window.goBack = function() {
+  if (screenHistory.length > 0) {
+    const prev = screenHistory.pop();
+    const current = document.querySelector('.screen.active');
+    if (current) current.classList.remove('active');
+    const prevEl = document.getElementById(prev);
+    if (prevEl) prevEl.classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.classList.toggle('active', item.dataset.screen === prev);
+    });
+  }
+};
+
+function hideLoading() {
+  const ls = document.getElementById('loading-screen');
+  ls.classList.add('hidden');
+  setTimeout(() => ls.style.display = 'none', 600);
+}
+
+function generateCode(prefix) {
+  const num = Math.floor(1000 + Math.random() * 9000);
+  return `${prefix}-${num}`;
+}
+
+function formatDate(ts) {
+  if (!ts) return '';
+  const d = ts.toDate ? ts.toDate() : new Date(ts);
+  return d.toLocaleDateString('es-AR', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
+// ---- AUTH ----
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    currentUser = user;
+    await loadUserData(user);
+    showApp();
+  } else {
+    currentUser = null; currentUserData = null;
+    showAuth();
+  }
+  hideLoading();
+});
+
+async function loadUserData(user) {
+  const ref = doc(db, 'usuarios', user.uid);
+  const snap = await getDoc(ref);
+  if (snap.exists()) {
+    currentUserData = snap.data();
+  } else {
+    // New user → create with welcome points
+    const data = {
+      uid: user.uid, nombre: user.displayName || '',
+      email: user.email, fotoPerfil: user.photoURL || '',
+      puntos: 500, fechaRegistro: serverTimestamp(), rol: 'cliente'
+    };
+    await setDoc(ref, data);
+    currentUserData = data;
+    showToast('¡Bienvenido! +500 puntos de regalo 🎉', 'success');
+  }
+}
+
+function showApp() {
+  document.getElementById('auth-screen').classList.remove('active');
+  document.getElementById('bottom-nav').classList.add('visible');
+  navigateTo('home-screen');
+  loadHomeData();
+  checkPWA();
+  // Track visit
+  trackVisit();
+}
+
+function showAuth() {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('auth-screen').classList.add('active');
+  document.getElementById('bottom-nav').classList.remove('visible');
+}
+
+async function trackVisit() {
+  try {
+    const ref = doc(db, 'metricas', 'global');
+    const snap = await getDoc(ref);
+    if (snap.exists()) {
+      await updateDoc(ref, { visitasTotales: increment(1) });
+    } else {
+      await setDoc(ref, { visitasTotales: 1 });
+    }
+  } catch(e) {}
+}
+
+// ---- AUTH TABS ----
+document.querySelectorAll('.auth-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.auth-panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
+  });
+});
+
+// Login
+document.getElementById('btn-login').addEventListener('click', async () => {
+  const email = document.getElementById('login-email').value.trim();
+  const pass = document.getElementById('login-pass').value;
+  const err = document.getElementById('login-error');
+  err.textContent = '';
+  if (!email || !pass) { err.textContent = 'Completá todos los campos'; return; }
+  const btn = document.getElementById('btn-login');
+  btn.innerHTML = '<div class="spinner"></div>';
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+  } catch(e) {
+    err.textContent = 'Email o contraseña incorrectos';
+    btn.textContent = 'Ingresar';
+  }
+});
+
+// Register
+document.getElementById('btn-register').addEventListener('click', async () => {
+  const name = document.getElementById('reg-name').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
+  const pass = document.getElementById('reg-pass').value;
+  const err = document.getElementById('register-error');
+  err.textContent = '';
+  if (!name || !email || !pass) { err.textContent = 'Completá todos los campos'; return; }
+  if (pass.length < 6) { err.textContent = 'La contraseña debe tener al menos 6 caracteres'; return; }
+  const btn = document.getElementById('btn-register');
+  btn.innerHTML = '<div class="spinner"></div>';
+  try {
+    const cred = await createUserWithEmailAndPassword(auth, email, pass);
+    await updateProfile(cred.user, { displayName: name });
+  } catch(e) {
+    err.textContent = e.code === 'auth/email-already-in-use' ? 'Este email ya está registrado' : 'Error al registrarse';
+    btn.textContent = 'Crear cuenta';
+  }
+});
+
+// Google
+document.getElementById('btn-google-login').addEventListener('click', () => googleSignIn());
+document.getElementById('btn-google-register').addEventListener('click', () => googleSignIn());
+async function googleSignIn() {
+  try { await signInWithPopup(auth, googleProvider); }
+  catch(e) { console.log(e); }
+}
+
+// Logout
+document.getElementById('btn-logout').addEventListener('click', async () => {
+  await signOut(auth);
+});
+
+// ---- HOME DATA ----
+async function loadHomeData() {
+  updateGreeting();
+  updatePoints();
+  loadBusinesses();
+  loadBenefitsPreview();
+  loadEventsPreview();
+}
+
+function updateGreeting() {
+  const name = currentUserData?.nombre || currentUser?.displayName || '';
+  const firstName = name.split(' ')[0];
+  document.getElementById('greeting-text').textContent = `Hola${firstName ? ' ' + firstName : ''} 👋`;
+}
+
+function updatePoints() {
+  const pts = currentUserData?.puntos || 0;
+  document.getElementById('home-points').innerHTML = `${pts}<span>pts</span>`;
+  document.getElementById('user-pts-header').textContent = `${pts} pts`;
+  document.getElementById('profile-points-chip').textContent = `${pts} puntos`;
+}
+
+// ---- BUSINESSES ----
+async function loadBusinesses() {
+  try {
+    const snap = await getDocs(collection(db, 'negocios'));
+    const list = document.getElementById('businesses-list');
+    if (snap.empty) {
+      // Seed default businesses
+      await seedBusinesses();
+      loadBusinesses(); return;
+    }
+    list.innerHTML = '';
+    snap.forEach(docSnap => {
+      const b = { id: docSnap.id, ...docSnap.data() };
+      list.appendChild(buildBusinessCard(b));
+    });
+    // Also update preview in events
+  } catch(e) {
+    console.error(e);
+  }
+}
+
+function buildBusinessCard(b) {
+  const div = document.createElement('div');
+  div.className = 'business-card';
+  div.style.animationDelay = '0.1s';
+  const coverHtml = b.portada
+    ? `<img class="business-cover" src="${b.portada}" alt="${b.nombre}" loading="lazy">`
+    : `<div class="business-cover-placeholder"><span>${b.nombre?.[0] || '?'}</span></div>`;
+  div.innerHTML = `
+    ${coverHtml}
+    <div class="business-info">
+      <div class="business-category">${b.categoria || 'Gosén'}</div>
+      <div class="business-name">${b.nombre}</div>
+      <div class="business-desc">${b.descripcion || ''}</div>
+      <button class="btn-outline" onclick="openBusiness('${b.id}')">
+        Ver más
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>`;
+  return div;
+}
+
+window.openBusiness = async function(id) {
+  try {
+    const snap = await getDoc(doc(db, 'negocios', id));
+    if (!snap.exists()) return;
+    const b = { id: snap.id, ...snap.data() };
+    // Track visit
+    try { await updateDoc(doc(db, 'negocios', id), { visitas: increment(1) }); } catch(e) {}
+    renderBusinessDetail(b);
+    navigateTo('business-screen');
+  } catch(e) { showToast('Error al cargar negocio', 'error'); }
+};
+
+function renderBusinessDetail(b) {
+  const container = document.getElementById('business-detail-content');
+  const coverHtml = b.portada
+    ? `<img class="business-detail-cover" src="${b.portada}" alt="${b.nombre}">`
+    : `<div class="business-detail-cover-placeholder"><span style="font-family:var(--font-display);font-size:4rem;color:var(--gray-2)">${b.nombre?.[0]}</span></div>`;
+
+  const promoHtml = b.promociones
+    ? `<div class="detail-section"><div class="detail-section-title">Promoción activa</div><div class="promo-badge">🔥 ${b.promociones}</div></div>` : '';
+
+  const scheduleHtml = b.horarios
+    ? `<div class="detail-section"><div class="detail-section-title">Horarios</div><div class="schedule-grid">${
+        Object.entries(b.horarios).map(([d,h]) =>
+          `<div class="schedule-row"><span class="schedule-day">${d}</span><span class="schedule-hours">${h}</span></div>`
+        ).join('')
+      }</div></div>` : '';
+
+  container.innerHTML = `
+    ${coverHtml}
+    <div class="business-detail-content" style="padding:24px">
+      <div class="business-detail-header">
+        <div class="business-detail-category">${b.categoria || ''}</div>
+        <div class="business-detail-name">${b.nombre}</div>
+        <div class="business-detail-desc">${b.descripcion || ''}</div>
+      </div>
+      ${promoHtml}
+      ${scheduleHtml}
+      <div style="margin-top:8px">
+        <button class="btn-whatsapp" onclick="contactWhatsApp('${b.id}','${b.nombre}','${b.whatsapp || ''}','${b.prefijo || 'GSN'}','${(b.mensajeWA||'').replace(/'/g,"\\'")}')">
+          <svg viewBox="0 0 24 24" fill="white" stroke="none"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Contactar por WhatsApp
+        </button>
+      </div>
+    </div>`;
+}
+
+window.contactWhatsApp = async function(negocioId, nombre, phone, prefijo, mensajeCustom) {
+  if (!phone) { showToast('WhatsApp no disponible', 'error'); return; }
+  if (!currentUser) return;
+  try {
+    const codigo = generateCode(prefijo);
+    const vence = new Date(); vence.setHours(vence.getHours() + 24);
+    await addDoc(collection(db, 'codigos'), {
+      usuarioId: currentUser.uid, negocio: negocioId, negocioNombre: nombre,
+      codigo, estado: 'pendiente', fecha: serverTimestamp(),
+      vencimiento: Timestamp.fromDate(vence)
+    });
+    // Track click
+    try { await updateDoc(doc(db, 'negocios', negocioId), { clicsWhatsApp: increment(1) }); } catch(e) {}
+    const mensaje = mensajeCustom || `Hola ${nombre}! Quiero consultar.\n\nMi código Club Gosén:\n${codigo}`;
+    const url = `https://wa.me/${phone}?text=${encodeURIComponent(mensaje)}`;
+    window.open(url, '_blank');
+    showToast(`Código ${codigo} generado ✓`, 'success');
+  } catch(e) { showToast('Error al generar código', 'error'); }
+};
+
+// ---- SEED DEFAULT DATA ----
+async function seedBusinesses() {
+  const businesses = [
+    {
+      nombre: 'Bloom', categoria: 'Ropa femenina',
+      descripcion: 'Moda femenina con identidad. Encontrá las prendas que te hacen sentir única.',
+      whatsapp: '5492983000001', prefijo: 'BLM', portada: '',
+      mensajeWA: 'Hola Bloom 🌸\nQuiero consultar productos.\n\nMi código Club Gosén:\n',
+      horarios: { 'Lun–Vie': '10:00–20:00', 'Sábados': '10:00–14:00' },
+      promociones: '15% OFF en toda la nueva colección',
+      visitas: 0, clicsWhatsApp: 0, codigosValidados: 0
+    },
+    {
+      nombre: 'DS Barber Shop', categoria: 'Barbería',
+      descripcion: 'El lugar donde el corte es un ritual. Estilo, precisión y detalle en cada visita.',
+      whatsapp: '5492983000002', prefijo: 'DSB', portada: '',
+      mensajeWA: 'Hola DS Barber 💈\nQuiero consultar turnos.\n\nMi código Club Gosén:\n',
+      horarios: { 'Lun–Sáb': '09:00–21:00' },
+      promociones: '',
+      visitas: 0, clicsWhatsApp: 0, codigosValidados: 0
+    },
+    {
+      nombre: 'Jireh', categoria: 'Peluquería · Maquillaje · Masajes',
+      descripcion: 'Belleza integral. Peluquería, maquillaje y masajes para tu bienestar total.',
+      whatsapp: '5492983000003', prefijo: 'JRH', portada: '',
+      mensajeWA: 'Hola Jireh ✨\nQuiero consultar servicios.\n\nMi código Club Gosén:\n',
+      horarios: { 'Lun–Vie': '09:00–19:00', 'Sábados': '09:00–14:00' },
+      promociones: '',
+      visitas: 0, clicsWhatsApp: 0, codigosValidados: 0
+    }
+  ];
+  for (const b of businesses) {
+    await addDoc(collection(db, 'negocios'), b);
+  }
+  // Seed benefits
+  const benefits = [
+    { titulo: '15% OFF en Bloom', descripcion: 'Descuento en toda la tienda', negocio: 'Bloom', puntosNecesarios: 800, icono: '🌸', activo: true },
+    { titulo: 'Upgrade barba premium', descripcion: 'Barba completa con diseño exclusivo', negocio: 'DS Barber Shop', puntosNecesarios: 700, icono: '💈', activo: true },
+    { titulo: 'Limpieza facial express', descripcion: 'Tratamiento facial relajante', negocio: 'Jireh', puntosNecesarios: 600, icono: '✨', activo: true },
+  ];
+  for (const b of benefits) {
+    await addDoc(collection(db, 'beneficios'), b);
+  }
+}
+
+// ---- BENEFITS ----
+async function loadBenefitsPreview() {
+  try {
+    const snap = await getDocs(collection(db, 'beneficios'));
+    const container = document.getElementById('benefits-preview');
+    if (snap.empty) { container.innerHTML = '<div style="color:var(--gray-3);font-size:0.8rem;padding:0 4px">Sin beneficios aún</div>'; return; }
+    container.innerHTML = '';
+    snap.forEach(d => {
+      const b = d.data();
+      if (!b.activo) return;
+      const card = document.createElement('div');
+      card.className = 'benefit-card-mini';
+      card.onclick = () => navigateTo('benefits-screen');
+      card.innerHTML = `
+        <div class="benefit-points">${b.puntosNecesarios}</div>
+        <div class="benefit-pts-label">puntos</div>
+        <div class="benefit-name">${b.titulo}</div>
+        <div class="benefit-business">${b.negocio}</div>`;
+      container.appendChild(card);
+    });
+  } catch(e) {}
+}
+
+async function loadBenefitsFull() {
+  try {
+    const snap = await getDocs(collection(db, 'beneficios'));
+    const container = document.getElementById('benefits-full-list');
+    if (snap.empty) {
+      container.innerHTML = `<div class="empty-state">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <h3>Sin beneficios</h3><p>Próximamente habrá beneficios disponibles</p></div>`;
+      return;
+    }
+    container.innerHTML = '';
+    const pts = currentUserData?.puntos || 0;
+    snap.forEach(docSnap => {
+      const b = { id: docSnap.id, ...docSnap.data() };
+      if (!b.activo) return;
+      const canCanjear = pts >= b.puntosNecesarios;
+      const card = document.createElement('div');
+      card.className = 'benefit-full-card';
+      card.innerHTML = `
+        <div class="benefit-icon-wrap"><span>${b.icono || '⭐'}</span></div>
+        <div class="benefit-full-info">
+          <div class="benefit-full-name">${b.titulo}</div>
+          <div class="benefit-full-biz">${b.negocio}</div>
+          <div class="benefit-full-pts">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            ${b.puntosNecesarios} puntos
+          </div>
+        </div>
+        <div class="benefit-cta">
+          <button class="btn-canjear" style="${!canCanjear ? 'opacity:0.3;pointer-events:none' : ''}"
+            onclick="canjearBeneficio('${b.id}','${b.titulo}','${b.negocio}',${b.puntosNecesarios})">
+            Canjear
+          </button>
+        </div>`;
+      container.appendChild(card);
+    });
+    document.getElementById('user-pts-header').textContent = `${pts} pts`;
+  } catch(e) {}
+}
+
+window.canjearBeneficio = async function(beneficioId, titulo, negocio, puntosNecesarios) {
+  const pts = currentUserData?.puntos || 0;
+  if (pts < puntosNecesarios) { showToast('No tenés suficientes puntos', 'error'); return; }
+  const codigo = generateCode('CJE');
+  const vence = new Date(); vence.setDate(vence.getDate() + 7);
+  try {
+    await addDoc(collection(db, 'canjes'), {
+      usuarioId: currentUser.uid, beneficioId, titulo, negocio,
+      codigo, estado: 'activo', fecha: serverTimestamp(),
+      vencimiento: Timestamp.fromDate(vence), puntos: puntosNecesarios
+    });
+    const newPts = pts - puntosNecesarios;
+    await updateDoc(doc(db, 'usuarios', currentUser.uid), { puntos: newPts });
+    currentUserData.puntos = newPts;
+    updatePoints();
+    // Show success modal
+    showCanjeModal(titulo, codigo, negocio);
+  } catch(e) { showToast('Error al canjear', 'error'); }
+};
+
+function showCanjeModal(titulo, codigo, negocio) {
+  const content = document.getElementById('modal-content');
+  const vence = new Date(); vence.setDate(vence.getDate() + 7);
+  content.innerHTML = `
+    <div class="modal-title">¡Canjeado!</div>
+    <div class="modal-sub">${titulo} — ${negocio}</div>
+    <div class="code-display">
+      <div class="code-value">${codigo}</div>
+      <div class="code-expires">Válido hasta ${vence.toLocaleDateString('es-AR')}</div>
+    </div>
+    <p style="font-size:0.82rem;color:var(--gray-3);text-align:center;line-height:1.6">
+      Presentá este código en ${negocio} para recibir tu beneficio.
+    </p>
+    <button class="btn-primary" style="margin-top:20px" onclick="closeModal()">Entendido</button>`;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+// ---- CANJES ----
+async function loadCanjes() {
+  try {
+    const q = query(collection(db, 'canjes'), where('usuarioId', '==', currentUser.uid));
+    const snap = await getDocs(q);
+    const container = document.getElementById('canjes-list');
+    if (snap.empty) {
+      container.innerHTML = `<div class="empty-state">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 12l2 2 4-4"/></svg>
+        <h3>Sin canjes</h3><p>Acumulá puntos y canjeá beneficios exclusivos</p></div>`;
+      return;
+    }
+    container.innerHTML = '';
+    const docs = [];
+    snap.forEach(d => docs.push({ id: d.id, ...d.data() }));
+    docs.sort((a,b) => (b.fecha?.seconds||0) - (a.fecha?.seconds||0));
+    docs.forEach(c => {
+      const card = document.createElement('div');
+      card.className = 'canje-card';
+      const statusClass = c.estado === 'activo' ? 'status-activo' : c.estado === 'usado' ? 'status-usado' : 'status-vencido';
+      const statusLabel = c.estado === 'activo' ? 'Activo' : c.estado === 'usado' ? 'Usado' : 'Vencido';
+      card.innerHTML = `
+        <div class="canje-header">
+          <div class="canje-name">${c.titulo}</div>
+          <div class="canje-status ${statusClass}">${statusLabel}</div>
+        </div>
+        <div class="canje-code">${c.codigo}</div>
+        <div class="canje-meta">${c.negocio} · ${formatDate(c.fecha)}</div>`;
+      container.appendChild(card);
+    });
+  } catch(e) {}
+}
+
+// ---- EVENTS ----
+async function loadEventsPreview() {
+  try {
+    const snap = await getDocs(collection(db, 'eventos'));
+    const container = document.getElementById('events-preview');
+    if (snap.empty) {
+      container.innerHTML = '<div style="color:var(--gray-3);font-size:0.8rem;padding:0 4px">Sin eventos próximos</div>';
+      return;
+    }
+    container.innerHTML = '';
+    snap.forEach(d => {
+      const e = d.data();
+      const card = document.createElement('div');
+      card.className = 'event-card';
+      const imgHtml = e.imagen
+        ? `<img class="event-img" src="${e.imagen}" alt="${e.titulo}">`
+        : `<div class="event-img-placeholder"><span>📅</span></div>`;
+      card.innerHTML = `${imgHtml}<div class="event-info"><div class="event-date">${e.fecha || ''}</div><div class="event-title">${e.titulo}</div></div>`;
+      container.appendChild(card);
+    });
+  } catch(e) {}
+}
+
+async function loadEventsFull() {
+  try {
+    const snap = await getDocs(collection(db, 'eventos'));
+    const container = document.getElementById('events-full-list');
+    if (snap.empty) {
+      container.innerHTML = `<div class="empty-state">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        <h3>Sin eventos</h3><p>Los próximos eventos aparecerán aquí</p></div>`;
+      return;
+    }
+    container.innerHTML = '';
+    snap.forEach(d => {
+      const e = d.data();
+      const card = document.createElement('div');
+      card.className = 'event-full-card';
+      const imgHtml = e.imagen
+        ? `<img class="event-full-img" src="${e.imagen}" alt="${e.titulo}">`
+        : `<div class="event-full-img-placeholder"><span>📅</span></div>`;
+      card.innerHTML = `${imgHtml}<div class="event-full-info"><div class="event-full-date">${e.fecha || ''}</div><div class="event-full-title">${e.titulo}</div><div class="event-full-desc">${e.descripcion || ''}</div></div>`;
+      container.appendChild(card);
+    });
+  } catch(e) {}
+}
+
+// ---- PROFILE ----
+async function loadProfile() {
+  if (!currentUser || !currentUserData) return;
+  const name = currentUserData.nombre || currentUser.displayName || 'Usuario';
+  document.getElementById('profile-name').textContent = name;
+  document.getElementById('profile-email').textContent = currentUser.email || '';
+  const pts = currentUserData.puntos || 0;
+  document.getElementById('profile-points-chip').textContent = `${pts} puntos`;
+  const avatarEl = document.getElementById('profile-avatar');
+  if (currentUser.photoURL) {
+    avatarEl.innerHTML = `<img src="${currentUser.photoURL}" alt="Avatar">`;
+  }
+  const avatarBtn = document.getElementById('avatar-btn');
+  if (currentUser.photoURL) {
+    avatarBtn.innerHTML = `<img src="${currentUser.photoURL}" alt="Avatar">`;
+  }
+}
+
+document.getElementById('avatar-btn').addEventListener('click', () => navigateTo('profile-screen'));
+
+// ---- MODAL ----
+window.closeModal = function(e) {
+  if (!e || e.target === document.getElementById('modal-overlay')) {
+    document.getElementById('modal-overlay').classList.remove('open');
+  }
+};
+
+// ---- PWA ----
+let deferredPrompt = null;
+function checkPWA() {
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+  if (isStandalone) return;
+  if (isIOS) {
+    setTimeout(() => {
+      const b = document.getElementById('ios-banner');
+      b.classList.add('show');
+    }, 4000);
+    document.getElementById('ios-close').onclick = () => document.getElementById('ios-banner').classList.remove('show');
+  }
+}
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault(); deferredPrompt = e;
+  setTimeout(() => {
+    document.getElementById('pwa-banner').classList.add('show');
+  }, 3000);
+});
+
+document.getElementById('pwa-install-btn').addEventListener('click', async () => {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  const result = await deferredPrompt.userChoice;
+  deferredPrompt = null;
+  document.getElementById('pwa-banner').classList.remove('show');
+});
+
+document.getElementById('pwa-close').addEventListener('click', () => {
+  document.getElementById('pwa-banner').classList.remove('show');
+});
+
+// ---- PWA MANIFEST (inline) ----
+const manifest = {
+  name: 'Club Gosén', short_name: 'Gosén',
+  description: 'Ecosistema de beneficios exclusivos',
+  start_url: '/', display: 'standalone',
+  background_color: '#0a0a0a', theme_color: '#0a0a0a',
+  icons: [{ src: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="%230a0a0a"/><text y=".9em" font-size="90" x="5">G</text></svg>', sizes: '192x192', type: 'image/svg+xml' }]
+};
+const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+document.getElementById('manifest-link').href = URL.createObjectURL(blob);
+
+</script>
+</body>
+</html>
