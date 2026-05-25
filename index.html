@@ -1661,21 +1661,43 @@ document.getElementById('btn-register').addEventListener('click', async () => {
 // Google
 document.getElementById('btn-google-login').addEventListener('click', () => googleSignIn());
 document.getElementById('btn-google-register').addEventListener('click', () => googleSignIn());
+
 async function googleSignIn() {
+  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
   try {
-    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
     if (isMobile) {
+      // Mostrar mensaje de espera
+      showToast('Redirigiendo a Google...', '');
       await signInWithRedirect(auth, googleProvider);
     } else {
       await signInWithPopup(auth, googleProvider);
     }
-  } catch(e) { console.log(e); }
+  } catch(e) {
+    console.log('Google sign in error:', e);
+    showToast('Error al conectar con Google', 'error');
+  }
 }
 
+// Manejar resultado del redirect de Google cuando vuelve
+async function handleRedirectResult() {
+  try {
+    const { getRedirectResult } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
+    const result = await getRedirectResult(auth);
+    if (result?.user) {
+      // onAuthStateChanged lo maneja automáticamente
+      console.log('Redirect Google OK:', result.user.email);
+    }
+  } catch(e) {
+    console.log('Redirect result error:', e);
+    if (e.code === 'auth/popup-blocked') {
+      showToast('Permití popups para usar Google', 'error');
+    }
+  }
+}
+handleRedirectResult();
+
 // Logout
-document.getElementById('btn-logout').addEventListener('click', async () => {
-  await signOut(auth);
-});
+// btn-logout manejado en Fase 3
 
 // ---- HOME DATA ----
 async function loadHomeData() {
@@ -2775,6 +2797,201 @@ window.previewAndUpload = function(input, previewId, field) {
 const _origLoadProfile = loadProfile;
 // Patch showApp para llamar checkAdminAccess
 const _origShowApp = showApp;
+
+
+// ======== FASE 3: MEJORAS UX & TIEMPO REAL ========
+
+// ---- PUNTOS EN TIEMPO REAL ----
+let unsubscribeUser = null;
+
+function suscribirPuntosRealtime(uid) {
+  if (unsubscribeUser) unsubscribeUser();
+  const { onSnapshot } = window._firestoreExtras || {};
+  // Usamos polling liviano cada 30s como alternativa sin onSnapshot extra
+  const interval = setInterval(async () => {
+    if (!currentUser) { clearInterval(interval); return; }
+    try {
+      const snap = await getDoc(doc(db, 'usuarios', currentUser.uid));
+      if (snap.exists()) {
+        const newPts = snap.data().puntos;
+        if (newPts !== currentUserData?.puntos) {
+          currentUserData.puntos = newPts;
+          updatePoints();
+        }
+      }
+    } catch(e) {}
+  }, 30000);
+  return interval;
+}
+
+// ---- LIMPIAR CÓDIGOS VENCIDOS ----
+async function limpiarCodigosVencidos() {
+  try {
+    const q = query(collection(db, 'codigos'),
+      where('usuarioId', '==', currentUser.uid),
+      where('estado', '==', 'pendiente'));
+    const snap = await getDocs(q);
+    const ahora = new Date();
+    snap.forEach(async (d) => {
+      const c = d.data();
+      const vence = c.vencimiento?.toDate ? c.vencimiento.toDate() : new Date(c.vencimiento);
+      if (vence < ahora) {
+        await updateDoc(doc(db, 'codigos', d.id), { estado: 'vencido' });
+      }
+    });
+  } catch(e) {}
+}
+
+// ---- REFRESH PUNTOS MANUAL ----
+window.refreshUserData = async function() {
+  if (!currentUser) return;
+  try {
+    const snap = await getDoc(doc(db, 'usuarios', currentUser.uid));
+    if (snap.exists()) {
+      currentUserData = snap.data();
+      updatePoints();
+      showToast('Puntos actualizados ✓', 'success');
+    }
+  } catch(e) {}
+};
+
+// Hacer la tarjeta de puntos tappable para refresh
+document.querySelector('.points-card')?.addEventListener('click', refreshUserData);
+
+// ---- MEJORA: CONFIRMAR ANTES DE CERRAR SESIÓN ----
+document.getElementById('btn-logout').addEventListener('click', async () => {
+  const content = document.getElementById('modal-content');
+  content.innerHTML = `
+    <div class="modal-title">Cerrar sesión</div>
+    <div class="modal-sub">¿Seguro que querés salir de Club Gosén?</div>
+    <button class="btn-primary" style="margin-bottom:12px" onclick="confirmLogout()">Sí, cerrar sesión</button>
+    <button class="btn-outline" style="width:100%;justify-content:center;padding:14px" onclick="closeModal()">Cancelar</button>`;
+  document.getElementById('modal-overlay').classList.add('open');
+});
+
+window.confirmLogout = async function() {
+  closeModal();
+  if (unsubscribeUser) unsubscribeUser();
+  await signOut(auth);
+};
+
+// ---- MEJORA: BÚSQUEDA DE NEGOCIOS ----
+window.filtrarNegocios = function(query) {
+  const cards = document.querySelectorAll('.business-card');
+  cards.forEach(card => {
+    const name = card.querySelector('.business-name')?.textContent?.toLowerCase() || '';
+    const cat = card.querySelector('.business-category')?.textContent?.toLowerCase() || '';
+    card.style.display = (name.includes(query.toLowerCase()) || cat.includes(query.toLowerCase())) ? 'block' : 'none';
+  });
+};
+
+// ---- MEJORA: PULL TO REFRESH EN HOME ----
+let touchStartY = 0;
+let isPulling = false;
+
+document.getElementById('home-screen').addEventListener('touchstart', (e) => {
+  touchStartY = e.touches[0].clientY;
+}, { passive: true });
+
+document.getElementById('home-screen').addEventListener('touchend', async (e) => {
+  const diff = e.changedTouches[0].clientY - touchStartY;
+  if (diff > 80 && window.scrollY === 0) {
+    showToast('Actualizando...', '');
+    await refreshUserData();
+    await loadHomeData();
+  }
+}, { passive: true });
+
+// ---- MEJORA: CONTADOR DE BENEFICIOS DISPONIBLES ----
+async function updateBeneficiosCount() {
+  try {
+    const snap = await getDocs(collection(db, 'beneficios'));
+    const pts = currentUserData?.puntos || 0;
+    let disponibles = 0;
+    snap.forEach(d => {
+      if (d.data().activo && pts >= d.data().puntosNecesarios) disponibles++;
+    });
+    if (disponibles > 0) {
+      const navBeneficios = document.querySelector('[data-screen="benefits-screen"]');
+      if (navBeneficios && !navBeneficios.querySelector('.admin-nav-dot')) {
+        const dot = document.createElement('div');
+        dot.className = 'admin-nav-dot';
+        navBeneficios.appendChild(dot);
+      }
+    }
+  } catch(e) {}
+}
+
+// ---- MEJORA: ONBOARDING PARA NUEVOS USUARIOS ----
+function showWelcomeModal(nombre) {
+  const content = document.getElementById('modal-content');
+  const firstName = nombre?.split(' ')[0] || '';
+  content.innerHTML = `
+    <div style="text-align:center;padding:16px 0">
+      <div style="font-size:3rem;margin-bottom:16px">🎉</div>
+      <div class="modal-title" style="text-align:center">¡Bienvenido${firstName ? ', ' + firstName : ''}!</div>
+      <div class="modal-sub" style="text-align:center;margin-bottom:24px">
+        Sumaste <strong style="color:var(--gold)">500 puntos</strong> de bienvenida.<br>
+        Ya podés explorar beneficios y negocios de Gosén.
+      </div>
+      <div style="background:var(--black-3);border-radius:var(--radius-md);padding:20px;margin-bottom:20px">
+        <div style="font-size:0.72rem;color:var(--gray-3);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:12px">¿Cómo funciona?</div>
+        <div style="display:flex;flex-direction:column;gap:10px;text-align:left">
+          <div style="display:flex;gap:10px;align-items:center;font-size:0.82rem">
+            <span style="font-size:1.2rem">🛍</span>
+            <span>Visitá los negocios de Gosén y contactalos por WhatsApp</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;font-size:0.82rem">
+            <span style="font-size:1.2rem">⭐</span>
+            <span>Cada compra validada suma <strong style="color:var(--gold)">100 puntos</strong></span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;font-size:0.82rem">
+            <span style="font-size:1.2rem">🎁</span>
+            <span>Canjeá puntos por beneficios exclusivos</span>
+          </div>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="closeModal()">¡Explorar Gosén!</button>
+    </div>`;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+// ---- PATCH: showApp para agregar mejoras Fase 3 ----
+const _origShowAppF3 = showApp;
+function showApp() {
+  document.getElementById('auth-screen').classList.remove('active');
+  document.getElementById('bottom-nav').classList.add('visible');
+  navigateTo('home-screen');
+  loadHomeData();
+  checkPWA();
+  trackVisit();
+  // Fase 3 extras
+  setTimeout(() => {
+    limpiarCodigosVencidos();
+    updateBeneficiosCount();
+  }, 2000);
+}
+
+// ---- PATCH: loadUserData para mostrar bienvenida ----
+const _origLoadUserData = loadUserData;
+async function loadUserData(user) {
+  const ref = doc(db, 'usuarios', user.uid);
+  const snap = await getDoc(ref);
+  if (snap.exists()) {
+    currentUserData = snap.data();
+  } else {
+    const data = {
+      uid: user.uid, nombre: user.displayName || '',
+      email: user.email, fotoPerfil: user.photoURL || '',
+      puntos: 500, fechaRegistro: serverTimestamp(), rol: 'cliente'
+    };
+    await setDoc(ref, data);
+    currentUserData = data;
+    // Mostrar modal de bienvenida después de cargar
+    setTimeout(() => showWelcomeModal(data.nombre), 1500);
+  }
+}
+
 
 // ---- PWA MANIFEST (inline) ----
 const manifest = {
