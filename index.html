@@ -1083,7 +1083,7 @@ html, body {
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword,
-  signInWithPopup, signInWithRedirect, getRedirectResult, GoogleAuthProvider,
+  signInWithPopup, signInWithRedirect, GoogleAuthProvider,
   signOut, onAuthStateChanged, updateProfile
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getFirestore, doc, getDoc, setDoc, updateDoc, collection,
@@ -1159,6 +1159,15 @@ function hideLoading() {
   setTimeout(() => ls.style.display = 'none', 600);
 }
 
+// Timeout de seguridad: si en 6s no cargó, mostrar auth
+setTimeout(() => {
+  const ls = document.getElementById('loading-screen');
+  if (ls && !ls.classList.contains('hidden')) {
+    hideLoading();
+    showAuth();
+  }
+}, 6000);
+
 function generateCode(prefix) {
   const num = Math.floor(1000 + Math.random() * 9000);
   return `${prefix}-${num}`;
@@ -1171,9 +1180,6 @@ function formatDate(ts) {
 }
 
 // ---- AUTH ----
-// Manejar redirect Google (mobile)
-getRedirectResult(auth).catch((e) => console.log(e));
-
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     currentUser = user;
