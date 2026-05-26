@@ -2129,12 +2129,44 @@ window.contactCurrentBusiness = function() {
   if (b) contactWhatsApp(b.id, b.nombre, b.whatsapp || '', b.prefijo || 'GSN', b.mensajeWA || '');
 };
 
-window.abrirFormResena = function() {
-  var b = window._currentBusiness;
-  if (b) mostrarFormResena(b.id, b.nombre);
+window.mostrarFormResena = async function(negocioId, negocioNombre) {
+  if (!currentUser) { showToast('Iniciá sesión para dejar una reseña', 'error'); return; }
+  try {
+    const q = query(collection(db, 'resenas'),
+      where('negocioId', '==', negocioId),
+      where('usuarioId', '==', currentUser.uid));
+    const snap = await getDocs(q);
+    if (!snap.empty) { showToast('Ya dejaste una reseña para este negocio', ''); return; }
+  } catch(e) {}
+  const content = document.getElementById('modal-content');
+  content.innerHTML =
+    '<div class="modal-title">Tu reseña</div>' +
+    '<div class="modal-sub">' + negocioNombre + '</div>' +
+    '<div style="margin-bottom:8px;font-size:0.72rem;color:var(--gray-3);letter-spacing:0.15em;text-transform:uppercase">Calificación</div>' +
+    '<div class="stars-input" id="stars-input">' +
+      '<button class="star-btn" data-val="1" onclick="selectStar(1)">★</button>' +
+      '<button class="star-btn" data-val="2" onclick="selectStar(2)">★</button>' +
+      '<button class="star-btn" data-val="3" onclick="selectStar(3)">★</button>' +
+      '<button class="star-btn" data-val="4" onclick="selectStar(4)">★</button>' +
+      '<button class="star-btn" data-val="5" onclick="selectStar(5)">★</button>' +
+    '</div>' +
+    '<div class="input-group">' +
+      '<label>Comentario (opcional)</label>' +
+      '<textarea id="resena-texto" rows="3" placeholder="Contá tu experiencia..." style="width:100%;padding:14px;background:var(--black-3);border:1px solid var(--gray-2);border-radius:var(--radius-sm);color:var(--white);font-family:var(--font-body);font-size:0.9rem;outline:none;resize:none"></textarea>' +
+    '</div>' +
+    '<button class="btn-admin-primary" id="btn-enviar-resena">Enviar reseña</button>';
+  window._selectedStars = 0;
+  window._resenaData = { negocioId, negocioNombre };
+  document.getElementById('btn-enviar-resena').onclick = function() { enviarResena(negocioId, negocioNombre); };
+  document.getElementById('modal-overlay').classList.add('open');
 };
 
-window.contactWhatsAppwindow.contactWhatsApp = async function(negocioId, nombre, phone, prefijo, mensajeCustom) {
+window.abrirFormResena = function() {
+  var b = window._currentBusiness;
+  if (b) window.mostrarFormResena(b.id, b.nombre);
+};
+
+window.contactWhatsApp = async function(negocioId, nombre, phone, prefijo, mensajeCustom) {
   if (!phone) { showToast('WhatsApp no disponible', 'error'); return; }
   if (!currentUser) return;
   try {
