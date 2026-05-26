@@ -2179,7 +2179,7 @@ window.contactWhatsApp = async function(negocioId, nombre, phone, prefijo, mensa
     });
     // Track click
     try { await updateDoc(doc(db, 'negocios', negocioId), { clicsWhatsApp: increment(1) }); } catch(e) {}
-    const mensaje = mensajeCustom || `Hola ${nombre}! Quiero consultar.\n\nMi código Club Gosén:\n${codigo}`;
+    const mensaje = (mensajeCustom ? mensajeCustom + codigo : `Hola ${nombre}! Quiero consultar.\n\nMi código Club Gosén:\n${codigo}`);
     const url = `https://wa.me/${phone}?text=${encodeURIComponent(mensaje)}`;
     window.open(url, '_blank');
     showToast(`Código ${codigo} generado ✓`, 'success');
