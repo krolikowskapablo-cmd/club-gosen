@@ -3433,6 +3433,114 @@ function renderBeneficioConProgreso(b, pts) {
 
 
 
+
+// ======== FUNCIONES DE RESEÑAS ========
+
+async function loadResenas(negocioId, container) {
+  try {
+    const q = query(
+      collection(db, 'resenas'),
+      where('negocioId', '==', negocioId),
+      where('estado', '==', 'aprobada')
+    );
+    const snap = await getDocs(q);
+    if (snap.empty) {
+      container.innerHTML = '<div style="font-size:0.82rem;color:var(--gray-3);text-align:center;padding:16px 0">Todavía no hay reseñas. ¡Sé el primero!</div>';
+      return;
+    }
+    const resenas = [];
+    snap.forEach(d => resenas.push({ id: d.id, ...d.data() }));
+    resenas.sort((a, b) => (b.fecha?.seconds || 0) - (a.fecha?.seconds || 0));
+    const promedio = resenas.reduce((sum, r) => sum + r.estrellas, 0) / resenas.length;
+    let starsHtml = '';
+    for (let i = 1; i <= 5; i++) {
+      starsHtml += '<span style="color:' + (i <= Math.round(promedio) ? 'var(--gold)' : 'var(--gray-2)') + ';font-size:16px">★</span>';
+    }
+    container.innerHTML = '<div class="resena-promedio"><div class="resena-promedio-num">' + promedio.toFixed(1) + '</div><div class="resena-promedio-info"><div style="display:flex;gap:3px">' + starsHtml + '</div><div class="resena-total">' + resenas.length + ' reseña' + (resenas.length !== 1 ? 's' : '') + '</div></div></div>';
+    resenas.forEach(function(r) {
+      const nombre = r.autorNombre || 'Cliente';
+      let rStars = '';
+      for (let i = 1; i <= 5; i++) {
+        rStars += '<span style="color:' + (i <= r.estrellas ? 'var(--gold)' : 'var(--gray-2)') + ';font-size:13px">★</span>';
+      }
+      container.innerHTML += '<div class="resena-card"><div class="resena-header"><div><div class="resena-autor">' + nombre[0].toUpperCase() + '. ' + nombre.split(' ')[0] + '</div><div style="display:flex;gap:2px">' + rStars + '</div></div><div class="resena-fecha">' + formatDate(r.fecha) + '</div></div>' + (r.texto ? '<div class="resena-texto">' + r.texto + '</div>' : '') + '</div>';
+    });
+  } catch(e) {
+    container.innerHTML = '<div style="font-size:0.82rem;color:var(--gray-3);text-align:center;padding:16px">Sin reseñas aún</div>';
+  }
+}
+
+window.selectStar = function(val) {
+  window._selectedStars = val;
+  document.querySelectorAll('.star-btn').forEach(function(btn) {
+    btn.classList.toggle('active', parseInt(btn.dataset.val) <= val);
+  });
+};
+
+window.enviarResena = async function(negocioId, negocioNombre) {
+  const estrellas = window._selectedStars || 0;
+  if (!estrellas) { showToast('Seleccioná una calificación', 'error'); return; }
+  const texto = document.getElementById('resena-texto') ? document.getElementById('resena-texto').value.trim() : '';
+  const nombre = currentUserData?.nombre || currentUser?.displayName || 'Cliente';
+  try {
+    await addDoc(collection(db, 'resenas'), {
+      negocioId: negocioId,
+      negocioNombre: negocioNombre,
+      usuarioId: currentUser.uid,
+      autorNombre: nombre,
+      estrellas: estrellas,
+      texto: texto,
+      estado: 'pendiente',
+      fecha: serverTimestamp()
+    });
+    closeModal();
+    showToast('¡Reseña enviada! Será visible tras la aprobación ✓', 'success');
+  } catch(e) { showToast('Error al enviar', 'error'); }
+};
+
+async function loadSAResenas() {
+  const container = document.getElementById('sa-resenas-list');
+  if (!container) return;
+  try {
+    const q = query(collection(db, 'resenas'), where('estado', '==', 'pendiente'));
+    const snap = await getDocs(q);
+    if (snap.empty) {
+      container.innerHTML = '<div style="color:var(--gray-3);font-size:0.82rem;text-align:center;padding:20px">Sin reseñas pendientes</div>';
+      return;
+    }
+    container.innerHTML = '';
+    snap.forEach(function(d) {
+      const r = { id: d.id, ...d.data() };
+      const divId = 'resena-' + r.id;
+      let rStars = '';
+      for (let i = 1; i <= 5; i++) {
+        rStars += '<span style="color:' + (i <= r.estrellas ? 'var(--gold)' : 'var(--gray-2)') + ';font-size:13px">★</span>';
+      }
+      container.innerHTML += '<div class="admin-card" id="' + divId + '"><div class="admin-card-header"><div class="admin-card-title">' + r.negocioNombre + '</div><div style="display:flex;gap:2px">' + rStars + '</div></div><div class="admin-card-sub">' + (r.autorNombre||'') + ' · ' + formatDate(r.fecha) + '</div>' + (r.texto ? '<div style="font-size:0.82rem;color:var(--gray-3);margin-top:8px">"' + r.texto + '"</div>' : '') + '<div style="display:flex;gap:8px;margin-top:12px"><button class="btn-moderar-ok" onclick="aprobarResena('' + r.id + '','' + divId + '')">✓ Aprobar</button><button class="btn-moderar-delete" onclick="eliminarResena('' + r.id + '','' + divId + '')">✗ Eliminar</button></div></div>';
+    });
+  } catch(e) {}
+}
+
+window.aprobarResena = async function(id, containerId) {
+  try {
+    await updateDoc(doc(db, 'resenas', id), { estado: 'aprobada' });
+    showToast('Reseña aprobada ✓', 'success');
+    const el = document.getElementById(containerId);
+    if (el) el.remove();
+  } catch(e) { showToast('Error', 'error'); }
+};
+
+window.eliminarResena = async function(id, containerId) {
+  try {
+    const { deleteDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+    await deleteDoc(doc(db, 'resenas', id));
+    showToast('Reseña eliminada', 'success');
+    const el = document.getElementById(containerId);
+    if (el) el.remove();
+  } catch(e) { showToast('Error', 'error'); }
+};
+
+
 // ---- PWA MANIFEST (inline) ----
 const manifest = {
   name: 'Club Gosén', short_name: 'Gosén',
