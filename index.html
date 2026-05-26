@@ -3516,7 +3516,13 @@ async function loadSAResenas() {
       for (let i = 1; i <= 5; i++) {
         rStars += '<span style="color:' + (i <= r.estrellas ? 'var(--gold)' : 'var(--gray-2)') + ';font-size:13px">★</span>';
       }
-      container.innerHTML += '<div class="admin-card" id="' + divId + '"><div class="admin-card-header"><div class="admin-card-title">' + r.negocioNombre + '</div><div style="display:flex;gap:2px">' + rStars + '</div></div><div class="admin-card-sub">' + (r.autorNombre||'') + ' · ' + formatDate(r.fecha) + '</div>' + (r.texto ? '<div style="font-size:0.82rem;color:var(--gray-3);margin-top:8px">"' + r.texto + '"</div>' : '') + '<div style="display:flex;gap:8px;margin-top:12px"><button class="btn-moderar-ok" onclick="aprobarResena('' + r.id + '','' + divId + '')">✓ Aprobar</button><button class="btn-moderar-delete" onclick="eliminarResena('' + r.id + '','' + divId + '')">✗ Eliminar</button></div></div>';
+      const card = document.createElement('div');
+      card.className = 'admin-card';
+      card.id = divId;
+      card.innerHTML = '<div class="admin-card-header"><div class="admin-card-title">' + r.negocioNombre + '</div><div style="display:flex;gap:2px">' + rStars + '</div></div><div class="admin-card-sub">' + (r.autorNombre||'') + ' · ' + formatDate(r.fecha) + '</div>' + (r.texto ? '<div style="font-size:0.82rem;color:var(--gray-3);margin-top:8px">' + r.texto + '</div>' : '') + '<div style="display:flex;gap:8px;margin-top:12px"><button class="btn-moderar-ok" id="ok-' + r.id + '">✓ Aprobar</button><button class="btn-moderar-delete" id="del-' + r.id + '">✗ Eliminar</button></div>';
+      container.appendChild(card);
+      document.getElementById('ok-' + r.id).onclick = function() { aprobarResena(r.id, divId); };
+      document.getElementById('del-' + r.id).onclick = function() { eliminarResena(r.id, divId); };
     });
   } catch(e) {}
 }
