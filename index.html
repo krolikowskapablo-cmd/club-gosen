@@ -12,7 +12,6 @@
 <link rel="icon" type="image/png" href="https://res.cloudinary.com/deip81g0m/image/upload/v1779812999/logo_club_gosen_buczd6.png">
 <link rel="apple-touch-icon" href="https://res.cloudinary.com/deip81g0m/image/upload/v1779812999/logo_club_gosen_buczd6.png">
 <title>Club Gosén</title>
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
@@ -1049,6 +1048,258 @@ html, body {
 .proximity-alert-sub { font-size: 0.72rem; color: var(--gray-3); line-height: 1.4; }
 
 
+/* ======== FASE 2: ADMIN STYLES ======== */
+
+/* Admin screens */
+#superadmin-screen, #negocio-admin-screen { background: var(--black); }
+
+.admin-header {
+  padding: 56px 24px 20px;
+  border-bottom: 1px solid var(--gray-2);
+  background: var(--black-2);
+}
+.admin-header-top {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 4px;
+}
+.admin-badge {
+  font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase;
+  padding: 4px 10px; border-radius: 100px;
+  background: rgba(201,168,76,0.15); border: 1px solid rgba(201,168,76,0.3);
+  color: var(--gold);
+}
+.admin-title {
+  font-family: var(--font-display); font-size: 2rem;
+  font-weight: 300; color: var(--white); margin-top: 6px;
+}
+.admin-sub { font-size: 0.78rem; color: var(--gray-3); margin-top: 2px; }
+
+/* Admin tabs */
+.admin-tabs {
+  display: flex; overflow-x: auto; gap: 0;
+  border-bottom: 1px solid var(--gray-2);
+  scrollbar-width: none;
+}
+.admin-tab {
+  flex-shrink: 0; padding: 14px 20px;
+  font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--gray-3); cursor: pointer; border-bottom: 2px solid transparent;
+  margin-bottom: -1px; transition: var(--transition); white-space: nowrap;
+}
+.admin-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+/* Admin panels */
+.admin-panel { display: none; padding: 24px; }
+.admin-panel.active { display: block; }
+
+/* Admin cards */
+.admin-card {
+  background: var(--black-2); border: 1px solid var(--gray-2);
+  border-radius: var(--radius-md); padding: 18px 20px;
+  margin-bottom: 12px;
+}
+.admin-card-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 4px;
+}
+.admin-card-title { font-size: 0.92rem; color: var(--white); font-weight: 500; }
+.admin-card-sub { font-size: 0.75rem; color: var(--gray-3); }
+
+/* Admin actions */
+.admin-actions { display: flex; gap: 8px; margin-top: 12px; }
+.btn-admin-edit {
+  flex: 1; padding: 9px; background: transparent;
+  border: 1px solid var(--gray-2); border-radius: var(--radius-sm);
+  color: var(--white); font-size: 0.72rem; letter-spacing: 0.08em;
+  text-transform: uppercase; cursor: pointer; transition: var(--transition);
+  text-align: center;
+}
+.btn-admin-edit:active { border-color: var(--gold); color: var(--gold); }
+.btn-admin-delete {
+  padding: 9px 14px; background: transparent;
+  border: 1px solid rgba(248,113,113,0.3); border-radius: var(--radius-sm);
+  color: #f87171; font-size: 0.72rem; cursor: pointer; transition: var(--transition);
+}
+.btn-admin-delete:active { background: rgba(248,113,113,0.1); }
+.btn-admin-primary {
+  width: 100%; padding: 14px; background: var(--gold);
+  border: none; border-radius: var(--radius-sm);
+  color: var(--black); font-family: var(--font-body);
+  font-size: 0.82rem; font-weight: 500; letter-spacing: 0.1em;
+  text-transform: uppercase; cursor: pointer; transition: var(--transition);
+  margin-bottom: 12px;
+}
+.btn-admin-primary:active { opacity: 0.85; transform: scale(0.98); }
+
+/* Metrics dashboard */
+.metrics-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+  margin-bottom: 20px;
+}
+.metric-card {
+  background: var(--black-2); border: 1px solid var(--gray-2);
+  border-radius: var(--radius-md); padding: 18px 16px;
+}
+.metric-value {
+  font-family: var(--font-display); font-size: 2.2rem;
+  color: var(--gold); font-weight: 300; line-height: 1;
+}
+.metric-label {
+  font-size: 0.65rem; letter-spacing: 0.15em; color: var(--gray-3);
+  text-transform: uppercase; margin-top: 4px;
+}
+.metric-card.full { grid-column: 1 / -1; }
+
+/* Business metrics */
+.biz-metric-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 0; border-bottom: 1px solid var(--gray-2);
+}
+.biz-metric-row:last-child { border-bottom: none; }
+.biz-metric-name { font-size: 0.82rem; color: var(--white); }
+.biz-metric-val { font-size: 0.82rem; color: var(--gold); font-weight: 500; }
+
+/* Form modal */
+.form-section-title {
+  font-size: 0.65rem; letter-spacing: 0.2em; color: var(--gold);
+  text-transform: uppercase; margin: 20px 0 12px;
+  padding-bottom: 6px; border-bottom: 1px solid var(--gray-2);
+}
+.form-row { display: flex; gap: 10px; }
+.form-row .input-group { flex: 1; }
+
+/* Image upload */
+.img-upload-area {
+  width: 100%; padding: 24px;
+  border: 2px dashed var(--gray-2); border-radius: var(--radius-md);
+  text-align: center; cursor: pointer; transition: var(--transition);
+  background: var(--black-3); margin-bottom: 16px;
+}
+.img-upload-area:active { border-color: var(--gold); }
+.img-upload-area input { display: none; }
+.img-upload-icon { font-size: 2rem; margin-bottom: 8px; }
+.img-upload-text { font-size: 0.78rem; color: var(--gray-3); }
+.img-preview {
+  width: 100%; height: 140px; object-fit: cover;
+  border-radius: var(--radius-sm); margin-bottom: 8px; display: none;
+}
+
+/* Code validator */
+.code-input-wrap {
+  display: flex; gap: 10px; margin-bottom: 16px;
+}
+.code-input {
+  flex: 1; padding: 14px 16px;
+  background: var(--black-3); border: 1px solid var(--gray-2);
+  border-radius: var(--radius-sm); color: var(--white);
+  font-family: 'Courier New', monospace; font-size: 1rem;
+  letter-spacing: 0.15em; text-transform: uppercase; outline: none;
+  transition: var(--transition);
+}
+.code-input:focus { border-color: var(--gold); }
+.btn-validate {
+  padding: 14px 20px; background: var(--gold);
+  border: none; border-radius: var(--radius-sm);
+  color: var(--black); font-size: 0.8rem; font-weight: 500;
+  cursor: pointer; white-space: nowrap; transition: var(--transition);
+}
+.btn-validate:active { opacity: 0.85; }
+
+.validation-result {
+  border-radius: var(--radius-md); padding: 16px 18px;
+  margin-bottom: 16px; display: none;
+}
+.validation-result.success { background: rgba(74,222,128,0.08); border: 1px solid rgba(74,222,128,0.25); }
+.validation-result.error { background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.25); }
+.validation-result-title { font-size: 0.88rem; font-weight: 500; margin-bottom: 4px; }
+.validation-result.success .validation-result-title { color: #4ade80; }
+.validation-result.error .validation-result-title { color: #f87171; }
+.validation-result-sub { font-size: 0.75rem; color: var(--gray-3); }
+
+/* Codigos pendientes */
+.codigo-item {
+  background: var(--black-2); border: 1px solid var(--gray-2);
+  border-radius: var(--radius-md); padding: 14px 16px;
+  margin-bottom: 10px; display: flex; align-items: center; gap: 12px;
+}
+.codigo-code {
+  font-family: 'Courier New', monospace; font-size: 1rem;
+  color: var(--gold); letter-spacing: 0.15em; flex: 1;
+}
+.codigo-meta { font-size: 0.72rem; color: var(--gray-3); }
+.btn-validate-code {
+  padding: 7px 14px; background: transparent;
+  border: 1px solid rgba(74,222,128,0.4); border-radius: 100px;
+  color: #4ade80; font-size: 0.7rem; cursor: pointer; white-space: nowrap;
+  transition: var(--transition);
+}
+.btn-validate-code:active { background: rgba(74,222,128,0.1); }
+
+/* Toggle switch */
+.toggle-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 0; border-bottom: 1px solid var(--gray-2);
+}
+.toggle-label { font-size: 0.85rem; color: var(--white); }
+.toggle-switch {
+  width: 44px; height: 24px; background: var(--gray-2);
+  border-radius: 12px; position: relative; cursor: pointer;
+  transition: var(--transition); flex-shrink: 0;
+}
+.toggle-switch.on { background: var(--gold); }
+.toggle-knob {
+  position: absolute; top: 3px; left: 3px;
+  width: 18px; height: 18px; background: white;
+  border-radius: 50%; transition: var(--transition);
+}
+.toggle-switch.on .toggle-knob { left: 23px; }
+
+/* Admin nav item */
+.admin-nav-dot {
+  width: 6px; height: 6px; background: var(--gold);
+  border-radius: 50%; position: absolute; top: 4px; right: 20px;
+}
+
+
+/* ---- PROGRESO BENEFICIOS ---- */
+.benefit-progress-wrap {
+  margin-top: 10px;
+}
+.benefit-progress-bar {
+  height: 3px; background: var(--gray-2);
+  border-radius: 2px; overflow: hidden; margin-bottom: 5px;
+}
+.benefit-progress-fill {
+  height: 100%; background: var(--gold);
+  border-radius: 2px; transition: width 0.6s ease;
+}
+.benefit-progress-text {
+  font-size: 0.65rem; color: var(--gray-3); letter-spacing: 0.05em;
+}
+.benefit-progress-text.close {
+  color: var(--gold);
+}
+
+/* ---- ALERTA PROXIMIDAD ---- */
+.proximity-alert {
+  margin: 0 24px 4px;
+  background: rgba(201,168,76,0.08);
+  border: 1px solid rgba(201,168,76,0.25);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  display: none;
+  animation: fadeUp 0.4s ease;
+}
+.proximity-alert.show { display: flex; align-items: center; gap: 12px; }
+.proximity-alert-icon { font-size: 1.4rem; flex-shrink: 0; }
+.proximity-alert-text { flex: 1; }
+.proximity-alert-title {
+  font-size: 0.82rem; color: var(--gold);
+  font-weight: 500; margin-bottom: 2px;
+}
+.proximity-alert-sub { font-size: 0.72rem; color: var(--gray-3); line-height: 1.4; }
+
+
 /* ======== RESEÑAS ======== */
 .resenas-section { margin-top: 8px; }
 
@@ -1121,6 +1372,7 @@ html, body {
 </style>
 </head>
 <body>
+
 
 <!-- LOADING -->
 <div id="loading-screen">
@@ -1362,6 +1614,7 @@ html, body {
   </div>
 
 
+
   <!-- SUPERADMIN SCREEN -->
   <div id="superadmin-screen" class="screen">
     <div class="admin-header">
@@ -1380,7 +1633,6 @@ html, body {
       <div class="admin-tab" data-panel="panel-beneficios">Beneficios</div>
       <div class="admin-tab" data-panel="panel-eventos">Eventos</div>
       <div class="admin-tab" data-panel="panel-usuarios">Usuarios</div>
-      <div class="admin-tab" data-panel="panel-resenas">Reseñas</div>
     </div>
 
     <!-- MÉTRICAS -->
@@ -1416,14 +1668,6 @@ html, body {
     <div class="admin-panel" id="panel-eventos">
       <button class="btn-admin-primary" onclick="openEventoForm()">+ Agregar evento</button>
       <div id="sa-eventos-list"></div>
-      <div style="height:20px"></div>
-    </div>
-
-    <!-- RESEÑAS -->
-    <div class="admin-panel" id="panel-resenas">
-      <div id="sa-resenas-list">
-        <div style="text-align:center;padding:20px"><div class="spinner"></div></div>
-      </div>
       <div style="height:20px"></div>
     </div>
 
@@ -1564,6 +1808,7 @@ html, body {
 
 <!-- FIREBASE -->
 <script type="module">
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword,
   signOut, onAuthStateChanged, updateProfile
@@ -1842,8 +2087,6 @@ function renderBusinessDetail(b) {
 
   const waPath = "M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z";
   const waMsg = (b.mensajeWA || '').replace(/'/g, "\'");
-  const resId = 'resenas-' + b.id;
-
   container.innerHTML =
     coverHtml +
     '<div class="business-detail-content" style="padding:24px">' +
@@ -1860,21 +2103,10 @@ function renderBusinessDetail(b) {
           'Contactar por WhatsApp' +
         '</button>' +
       '</div>' +
-      '<div style="margin-top:28px">' +
-        '<div class="detail-section-title" style="display:flex;align-items:center;justify-content:space-between">' +
-          '<span>Reseñas</span>' +
-          '<button class="btn-outline" style="padding:7px 14px;font-size:0.68rem" onclick="mostrarFormResena('' + b.id + '','' + b.nombre + '')">' +
-            '+ Dejar reseña' +
-          '</button>' +
-        '</div>' +
         '<div id="' + resId + '"><div style="text-align:center;padding:16px"><div class="spinner"></div></div></div>' +
       '</div>' +
     '</div>';
 
-  setTimeout(function() {
-    var rc = document.getElementById(resId);
-    if (rc) loadResenas(b.id, rc);
-  }, 200);
 }
 
 window.contactWhatsApp = async function(negocioId, nombre, phone, prefijo, mensajeCustom) {
@@ -2202,7 +2434,6 @@ document.querySelectorAll('.admin-tab').forEach(tab => {
       if (tab.dataset.panel === 'panel-beneficios') loadSABeneficios();
       if (tab.dataset.panel === 'panel-eventos') loadSAEventos();
       if (tab.dataset.panel === 'panel-usuarios') loadSAUsuarios();
-      if (tab.dataset.panel === 'panel-resenas') loadSAResenas();
       if (tab.dataset.panel === 'na-panel-codigos') loadNACodigos();
       if (tab.dataset.panel === 'na-panel-metricas') loadNAMetricas();
     }
@@ -3144,197 +3375,1272 @@ function renderBeneficioConProgreso(b, pts) {
 
 
 
-// ======== SISTEMA DE RESEÑAS ========
 
-// ---- Render estrellas ----
-function renderStars(rating, size = 16) {
-  let html = '<div class="stars-display">';
-  for (let i = 1; i <= 5; i++) {
-    html += `<span class="star ${i <= rating ? '' : 'empty'}" style="font-size:${size}px">★</span>`;
+// ======== FASE 2: ADMIN JS ========
+
+let currentNegocioAdminId = null;
+let currentValidacionCodigo = null;
+let cloudinaryCloud = 'deip81g0m';
+let cloudinaryPreset = 'Club Gosen';
+
+// ---- ADMIN TABS ----
+document.querySelectorAll('.admin-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    const parent = tab.closest('.screen');
+    parent.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+    parent.querySelectorAll('.admin-panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    const panel = document.getElementById(tab.dataset.panel);
+    if (panel) {
+      panel.classList.add('active');
+      // Load data for panel
+      if (tab.dataset.panel === 'panel-metricas') loadSAMetricas();
+      if (tab.dataset.panel === 'panel-negocios') loadSANegocios();
+      if (tab.dataset.panel === 'panel-beneficios') loadSABeneficios();
+      if (tab.dataset.panel === 'panel-eventos') loadSAEventos();
+      if (tab.dataset.panel === 'panel-usuarios') loadSAUsuarios();
+      if (tab.dataset.panel === 'na-panel-codigos') loadNACodigos();
+      if (tab.dataset.panel === 'na-panel-metricas') loadNAMetricas();
+    }
+  });
+});
+
+// ---- ACCESO ADMIN ----
+function checkAdminAccess() {
+  const rol = currentUserData?.rol;
+  if (rol === 'superadmin') {
+    // Mostrar botón admin en perfil
+    addAdminMenuItems();
+  } else if (rol === 'negocio') {
+    addAdminMenuItems();
   }
-  html += '</div>';
-  return html;
 }
 
-// ---- Cargar reseñas de un negocio ----
-async function loadResenas(negocioId, container) {
+function addAdminMenuItems() {
+  const menu = document.querySelector('.profile-menu');
+  if (!menu || document.getElementById('admin-menu-item')) return;
+  const rol = currentUserData?.rol;
+  const item = document.createElement('div');
+  item.id = 'admin-menu-item';
+  item.className = 'profile-menu-item';
+  item.style.borderTop = '1px solid var(--gray-2)';
+  item.style.marginTop = '8px';
+  item.style.paddingTop = '16px';
+  if (rol === 'superadmin') {
+    item.innerHTML = `
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" width="20" height="20" stroke="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      <div class="profile-menu-label" style="color:var(--gold)">Panel Superadmin</div>
+      <svg class="profile-menu-arrow" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M9 18l6-6-6-6"/></svg>`;
+    item.onclick = () => openSuperAdmin();
+  } else {
+    item.innerHTML = `
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" width="20" height="20" stroke="var(--gold)"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 12h6M12 9v6"/></svg>
+      <div class="profile-menu-label" style="color:var(--gold)">Administrar mi negocio</div>
+      <svg class="profile-menu-arrow" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M9 18l6-6-6-6"/></svg>`;
+    item.onclick = () => openNegocioAdmin();
+  }
+  menu.insertBefore(item, menu.firstChild);
+}
+
+// ---- SUPERADMIN ----
+window.openSuperAdmin = async function() {
+  navigateTo('superadmin-screen');
+  loadSAMetricas();
+};
+
+async function loadSAMetricas() {
   try {
-    const q = query(
-      collection(db, 'resenas'),
-      where('negocioId', '==', negocioId),
-      where('estado', '==', 'aprobada')
-    );
-    const snap = await getDocs(q);
+    // Global metrics
+    const mSnap = await getDoc(doc(db, 'metricas', 'global'));
+    const m = mSnap.exists() ? mSnap.data() : {};
+    document.getElementById('m-visitas').textContent = m.visitasTotales || 0;
 
-    if (snap.empty) {
-      container.innerHTML = '<div style="font-size:0.82rem;color:var(--gray-3);text-align:center;padding:16px 0">Todavía no hay reseñas. ¡Sé el primero!</div>';
-      return { total: 0, promedio: 0 };
-    }
+    // Users count
+    const uSnap = await getDocs(collection(db, 'usuarios'));
+    document.getElementById('m-usuarios').textContent = uSnap.size;
 
-    const resenas = [];
-    snap.forEach(d => resenas.push({ id: d.id, ...d.data() }));
-    resenas.sort((a, b) => (b.fecha?.seconds || 0) - (a.fecha?.seconds || 0));
+    // Canjes count
+    const cSnap = await getDocs(collection(db, 'canjes'));
+    document.getElementById('m-canjes').textContent = cSnap.size;
 
-    const promedio = resenas.reduce((sum, r) => sum + r.estrellas, 0) / resenas.length;
+    // Codigos count
+    const codSnap = await getDocs(collection(db, 'codigos'));
+    document.getElementById('m-codigos').textContent = codSnap.size;
 
-    container.innerHTML = `
-      <div class="resena-promedio">
-        <div class="resena-promedio-num">${promedio.toFixed(1)}</div>
-        <div class="resena-promedio-info">
-          ${renderStars(Math.round(promedio), 18)}
-          <div class="resena-total">${resenas.length} reseña${resenas.length !== 1 ? 's' : ''}</div>
-        </div>
-      </div>`;
-
-    resenas.forEach(r => {
-      const nombre = r.autorNombre || 'Cliente';
-      const inicial = nombre[0].toUpperCase();
-      container.innerHTML += `
-        <div class="resena-card">
-          <div class="resena-header">
-            <div>
-              <div class="resena-autor">${inicial}. ${nombre.split(' ')[0]}</div>
-              ${renderStars(r.estrellas, 13)}
-            </div>
-            <div class="resena-fecha">${formatDate(r.fecha)}</div>
-          </div>
-          ${r.texto ? `<div class="resena-texto">${r.texto}</div>` : ''}
+    // Per-business metrics
+    const bizSnap = await getDocs(collection(db, 'negocios'));
+    const bizMetrics = document.getElementById('sa-biz-metrics');
+    bizMetrics.innerHTML = '';
+    bizSnap.forEach(d => {
+      const b = d.data();
+      bizMetrics.innerHTML += `
+        <div style="margin-bottom:16px">
+          <div style="font-size:0.78rem;color:var(--gold);letter-spacing:0.1em;margin-bottom:8px;text-transform:uppercase">${b.nombre}</div>
+          <div class="biz-metric-row"><span class="biz-metric-name">Visitas</span><span class="biz-metric-val">${b.visitas||0}</span></div>
+          <div class="biz-metric-row"><span class="biz-metric-name">Clics WhatsApp</span><span class="biz-metric-val">${b.clicsWhatsApp||0}</span></div>
+          <div class="biz-metric-row"><span class="biz-metric-name">Códigos validados</span><span class="biz-metric-val">${b.codigosValidados||0}</span></div>
         </div>`;
     });
+  } catch(e) { console.error(e); }
+}
 
-    return { total: resenas.length, promedio };
-  } catch(e) {
+async function loadSANegocios() {
+  try {
+    const snap = await getDocs(collection(db, 'negocios'));
+    const container = document.getElementById('sa-negocios-list');
     container.innerHTML = '';
-    return { total: 0, promedio: 0 };
+    snap.forEach(d => {
+      const b = { id: d.id, ...d.data() };
+      container.innerHTML += `
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <div class="admin-card-title">${b.nombre}</div>
+            <div class="admin-badge">${b.categoria||''}</div>
+          </div>
+          <div class="admin-card-sub">${b.descripcion?.substring(0,60)||''}...</div>
+          <div class="admin-actions">
+            <div class="btn-admin-edit" onclick="openNegocioForm('${b.id}')">Editar</div>
+            <button class="btn-admin-delete" onclick="deleteNegocio('${b.id}','${b.nombre}')">🗑</button>
+          </div>
+        </div>`;
+    });
+    if (snap.empty) container.innerHTML = '<div style="color:var(--gray-3);font-size:0.82rem;text-align:center;padding:20px">Sin negocios</div>';
+  } catch(e) {}
+}
+
+async function loadSABeneficios() {
+  try {
+    const snap = await getDocs(collection(db, 'beneficios'));
+    const container = document.getElementById('sa-beneficios-list');
+    container.innerHTML = '';
+    snap.forEach(d => {
+      const b = { id: d.id, ...d.data() };
+      container.innerHTML += `
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <div class="admin-card-title">${b.icono||'⭐'} ${b.titulo}</div>
+            <div style="font-size:0.78rem;color:var(--gold)">${b.puntosNecesarios} pts</div>
+          </div>
+          <div class="admin-card-sub">${b.negocio} · ${b.activo ? 'Activo' : 'Inactivo'}</div>
+          <div class="admin-actions">
+            <div class="btn-admin-edit" onclick="openBeneficioForm('${b.id}')">Editar</div>
+            <button class="btn-admin-delete" onclick="deleteBeneficio('${b.id}')">🗑</button>
+          </div>
+        </div>`;
+    });
+    if (snap.empty) container.innerHTML = '<div style="color:var(--gray-3);font-size:0.82rem;text-align:center;padding:20px">Sin beneficios</div>';
+  } catch(e) {}
+}
+
+async function loadSAEventos() {
+  try {
+    const snap = await getDocs(collection(db, 'eventos'));
+    const container = document.getElementById('sa-eventos-list');
+    container.innerHTML = '';
+    snap.forEach(d => {
+      const e = { id: d.id, ...d.data() };
+      container.innerHTML += `
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <div class="admin-card-title">${e.titulo}</div>
+            <div style="font-size:0.72rem;color:var(--gold)">${e.fecha||''}</div>
+          </div>
+          <div class="admin-card-sub">${e.descripcion?.substring(0,60)||''}</div>
+          <div class="admin-actions">
+            <div class="btn-admin-edit" onclick="openEventoForm('${e.id}')">Editar</div>
+            <button class="btn-admin-delete" onclick="deleteEvento('${e.id}')">🗑</button>
+          </div>
+        </div>`;
+    });
+    if (snap.empty) container.innerHTML = '<div style="color:var(--gray-3);font-size:0.82rem;text-align:center;padding:20px">Sin eventos</div>';
+  } catch(e) {}
+}
+
+async function loadSAUsuarios() {
+  try {
+    const snap = await getDocs(collection(db, 'usuarios'));
+    const container = document.getElementById('sa-usuarios-list');
+    container.innerHTML = '';
+    snap.forEach(d => {
+      const u = { id: d.id, ...d.data() };
+      container.innerHTML += `
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <div class="admin-card-title">${u.nombre||u.email}</div>
+            <div class="admin-badge">${u.rol||'cliente'}</div>
+          </div>
+          <div class="admin-card-sub">${u.email} · ${u.puntos||0} pts</div>
+          <div class="admin-actions">
+            <div class="btn-admin-edit" onclick="editUserRole('${u.id}','${u.rol||'cliente'}')">Cambiar rol</div>
+            <div class="btn-admin-edit" onclick="editUserPoints('${u.id}',${u.puntos||0})">Editar puntos</div>
+          </div>
+        </div>`;
+    });
+  } catch(e) {}
+}
+
+// ---- NEGOCIO FORM ----
+window.openNegocioForm = function(id = null) {
+  const content = document.getElementById('modal-content');
+  content.innerHTML = `
+    <div class="modal-title">${id ? 'Editar' : 'Nuevo'} negocio</div>
+    <div class="form-section-title">Portada</div>
+    <div class="img-upload-area" onclick="document.getElementById('sa-portada-input').click()">
+      <input type="file" id="sa-portada-input" accept="image/*" onchange="previewImg(this,'sa-portada-prev')">
+      <img class="img-preview" id="sa-portada-prev">
+      <div class="img-upload-icon">📷</div>
+      <div class="img-upload-text">Subir portada desde galería</div>
+    </div>
+    <div class="input-group"><label>Nombre</label><input type="text" id="sa-n-nombre" placeholder="Nombre del negocio"></div>
+    <div class="input-group"><label>Categoría</label><input type="text" id="sa-n-cat" placeholder="Ej: Ropa femenina"></div>
+    <div class="input-group"><label>Descripción</label><textarea id="sa-n-desc" rows="3" style="width:100%;padding:14px;background:var(--black-3);border:1px solid var(--gray-2);border-radius:var(--radius-sm);color:var(--white);font-family:var(--font-body);font-size:0.9rem;outline:none;resize:none"></textarea></div>
+    <div class="input-group"><label>WhatsApp (con código país)</label><input type="tel" id="sa-n-wa" placeholder="5492983123456"></div>
+    <div class="input-group"><label>Prefijo código (3 letras)</label><input type="text" id="sa-n-pref" placeholder="BLM" maxlength="3" style="text-transform:uppercase"></div>
+    <div class="input-group"><label>Promoción activa</label><input type="text" id="sa-n-promo" placeholder="Ej: 15% OFF"></div>
+    <div class="form-section-title">Horarios</div>
+    <div class="input-group"><label>Lun–Vie</label><input type="text" id="sa-n-hlv" placeholder="10:00–20:00"></div>
+    <div class="input-group"><label>Sábados</label><input type="text" id="sa-n-hsab" placeholder="10:00–14:00"></div>
+    <div class="input-group"><label>Domingos</label><input type="text" id="sa-n-hdom" placeholder="Cerrado"></div>
+    <button class="btn-admin-primary" onclick="saveNegocioSA('${id||''}')">Guardar negocio</button>
+    <div style="height:10px"></div>`;
+
+  if (id) loadNegocioFormData(id);
+  document.getElementById('modal-overlay').classList.add('open');
+};
+
+async function loadNegocioFormData(id) {
+  const snap = await getDoc(doc(db, 'negocios', id));
+  if (!snap.exists()) return;
+  const b = snap.data();
+  document.getElementById('sa-n-nombre').value = b.nombre||'';
+  document.getElementById('sa-n-cat').value = b.categoria||'';
+  document.getElementById('sa-n-desc').value = b.descripcion||'';
+  document.getElementById('sa-n-wa').value = b.whatsapp||'';
+  document.getElementById('sa-n-pref').value = b.prefijo||'';
+  document.getElementById('sa-n-promo').value = b.promociones||'';
+  document.getElementById('sa-n-hlv').value = b.horarios?.['Lun–Vie']||'';
+  document.getElementById('sa-n-hsab').value = b.horarios?.['Sábados']||'';
+  document.getElementById('sa-n-hdom').value = b.horarios?.['Domingos']||'';
+  if (b.portada) {
+    const prev = document.getElementById('sa-portada-prev');
+    prev.src = b.portada; prev.style.display = 'block';
   }
 }
 
-// ---- Verificar si el usuario ya reseñó este negocio ----
-async function userYaReseno(negocioId) {
-  if (!currentUser) return false;
+window.saveNegocioSA = async function(id) {
+  const nombre = document.getElementById('sa-n-nombre').value.trim();
+  if (!nombre) { showToast('El nombre es obligatorio', 'error'); return; }
+  const portadaFile = document.getElementById('sa-portada-input')?.files?.[0];
+  let portadaUrl = '';
+  if (portadaFile) {
+    portadaUrl = await uploadToCloudinary(portadaFile);
+  } else if (id) {
+    const snap = await getDoc(doc(db, 'negocios', id));
+    portadaUrl = snap.data()?.portada || '';
+  }
+  const data = {
+    nombre, categoria: document.getElementById('sa-n-cat').value.trim(),
+    descripcion: document.getElementById('sa-n-desc').value.trim(),
+    whatsapp: document.getElementById('sa-n-wa').value.trim(),
+    prefijo: document.getElementById('sa-n-pref').value.trim().toUpperCase(),
+    promociones: document.getElementById('sa-n-promo').value.trim(),
+    horarios: {
+      'Lun–Vie': document.getElementById('sa-n-hlv').value.trim(),
+      'Sábados': document.getElementById('sa-n-hsab').value.trim(),
+      'Domingos': document.getElementById('sa-n-hdom').value.trim(),
+    },
+    ...(portadaUrl && { portada: portadaUrl }),
+    visitas: 0, clicsWhatsApp: 0, codigosValidados: 0,
+  };
   try {
-    const q = query(
-      collection(db, 'resenas'),
-      where('negocioId', '==', negocioId),
-      where('usuarioId', '==', currentUser.uid)
-    );
-    const snap = await getDocs(q);
-    return !snap.empty;
-  } catch(e) { return false; }
-}
+    if (id) {
+      await updateDoc(doc(db, 'negocios', id), data);
+    } else {
+      await addDoc(collection(db, 'negocios'), data);
+    }
+    closeModal();
+    showToast('Negocio guardado ✓', 'success');
+    loadSANegocios();
+  } catch(e) { showToast('Error al guardar', 'error'); }
+};
 
-// ---- Formulario para dejar reseña ----
-async function mostrarFormResena(negocioId, negocioNombre) {
-  if (!currentUser) { showToast('Iniciá sesión para dejar una reseña', 'error'); return; }
+window.deleteNegocio = async function(id, nombre) {
+  if (!confirm(`¿Eliminar ${nombre}?`)) return;
+  try {
+    const { deleteDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+    await deleteDoc(doc(db, 'negocios', id));
+    showToast('Negocio eliminado', 'success');
+    loadSANegocios();
+  } catch(e) { showToast('Error al eliminar', 'error'); }
+};
 
-  const yaReseno = await userYaReseno(negocioId);
-  if (yaReseno) { showToast('Ya dejaste una reseña para este negocio', ''); return; }
-
+// ---- BENEFICIO FORM ----
+window.openBeneficioForm = function(id = null) {
   const content = document.getElementById('modal-content');
   content.innerHTML = `
-    <div class="modal-title">Tu reseña</div>
-    <div class="modal-sub">${negocioNombre}</div>
-    <div style="margin-bottom:8px;font-size:0.72rem;color:var(--gray-3);letter-spacing:0.15em;text-transform:uppercase">Calificación</div>
-    <div class="stars-input" id="stars-input">
-      <button class="star-btn" data-val="1" onclick="selectStar(1)">★</button>
-      <button class="star-btn" data-val="2" onclick="selectStar(2)">★</button>
-      <button class="star-btn" data-val="3" onclick="selectStar(3)">★</button>
-      <button class="star-btn" data-val="4" onclick="selectStar(4)">★</button>
-      <button class="star-btn" data-val="5" onclick="selectStar(5)">★</button>
+    <div class="modal-title">${id ? 'Editar' : 'Nuevo'} beneficio</div>
+    <div class="input-group"><label>Título</label><input type="text" id="sa-b-titulo" placeholder="Ej: 15% OFF en Bloom"></div>
+    <div class="input-group"><label>Descripción</label><input type="text" id="sa-b-desc" placeholder="Descripción breve"></div>
+    <div class="input-group"><label>Negocio</label><input type="text" id="sa-b-negocio" placeholder="Ej: Bloom"></div>
+    <div class="input-group"><label>Ícono (emoji)</label><input type="text" id="sa-b-icono" placeholder="🌸" maxlength="2"></div>
+    <div class="input-group"><label>Puntos necesarios</label><input type="number" id="sa-b-puntos" placeholder="800"></div>
+    <div class="toggle-row">
+      <span class="toggle-label">Activo</span>
+      <div class="toggle-switch on" id="sa-b-activo-toggle" onclick="this.classList.toggle('on')">
+        <div class="toggle-knob"></div>
+      </div>
     </div>
-    <div class="input-group">
-      <label>Comentario (opcional)</label>
-      <textarea id="resena-texto" rows="3" placeholder="Contá tu experiencia..." style="width:100%;padding:14px;background:var(--black-3);border:1px solid var(--gray-2);border-radius:var(--radius-sm);color:var(--white);font-family:var(--font-body);font-size:0.9rem;outline:none;resize:none"></textarea>
-    </div>
-    <button class="btn-admin-primary" onclick="enviarResena('${negocioId}','${negocioNombre}')">Enviar reseña</button>
-    <div style="height:4px"></div>`;
+    <button class="btn-admin-primary" style="margin-top:16px" onclick="saveBeneficioSA('${id||''}')">Guardar beneficio</button>`;
 
-  window._selectedStars = 0;
+  if (id) loadBeneficioFormData(id);
+  document.getElementById('modal-overlay').classList.add('open');
+};
+
+async function loadBeneficioFormData(id) {
+  const snap = await getDoc(doc(db, 'beneficios', id));
+  if (!snap.exists()) return;
+  const b = snap.data();
+  document.getElementById('sa-b-titulo').value = b.titulo||'';
+  document.getElementById('sa-b-desc').value = b.descripcion||'';
+  document.getElementById('sa-b-negocio').value = b.negocio||'';
+  document.getElementById('sa-b-icono').value = b.icono||'';
+  document.getElementById('sa-b-puntos').value = b.puntosNecesarios||'';
+  if (!b.activo) document.getElementById('sa-b-activo-toggle').classList.remove('on');
+}
+
+window.saveBeneficioSA = async function(id) {
+  const titulo = document.getElementById('sa-b-titulo').value.trim();
+  if (!titulo) { showToast('El título es obligatorio', 'error'); return; }
+  const activo = document.getElementById('sa-b-activo-toggle').classList.contains('on');
+  const data = {
+    titulo, descripcion: document.getElementById('sa-b-desc').value.trim(),
+    negocio: document.getElementById('sa-b-negocio').value.trim(),
+    icono: document.getElementById('sa-b-icono').value.trim() || '⭐',
+    puntosNecesarios: parseInt(document.getElementById('sa-b-puntos').value) || 500,
+    activo
+  };
+  try {
+    if (id) { await updateDoc(doc(db, 'beneficios', id), data); }
+    else { await addDoc(collection(db, 'beneficios'), data); }
+    closeModal(); showToast('Beneficio guardado ✓', 'success');
+    loadSABeneficios();
+  } catch(e) { showToast('Error al guardar', 'error'); }
+};
+
+window.deleteBeneficio = async function(id) {
+  if (!confirm('¿Eliminar beneficio?')) return;
+  try {
+    const { deleteDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+    await deleteDoc(doc(db, 'beneficios', id));
+    showToast('Eliminado', 'success'); loadSABeneficios();
+  } catch(e) { showToast('Error', 'error'); }
+};
+
+// ---- EVENTO FORM ----
+window.openEventoForm = function(id = null) {
+  const content = document.getElementById('modal-content');
+  content.innerHTML = `
+    <div class="modal-title">${id ? 'Editar' : 'Nuevo'} evento</div>
+    <div class="img-upload-area" onclick="document.getElementById('sa-ev-img-input').click()">
+      <input type="file" id="sa-ev-img-input" accept="image/*" onchange="previewImg(this,'sa-ev-img-prev')">
+      <img class="img-preview" id="sa-ev-img-prev">
+      <div class="img-upload-icon">🖼</div>
+      <div class="img-upload-text">Subir imagen del evento</div>
+    </div>
+    <div class="input-group"><label>Título</label><input type="text" id="sa-ev-titulo" placeholder="Nombre del evento"></div>
+    <div class="input-group"><label>Fecha</label><input type="text" id="sa-ev-fecha" placeholder="Ej: 15 de Febrero 2025"></div>
+    <div class="input-group"><label>Descripción</label><textarea id="sa-ev-desc" rows="3" style="width:100%;padding:14px;background:var(--black-3);border:1px solid var(--gray-2);border-radius:var(--radius-sm);color:var(--white);font-family:var(--font-body);font-size:0.9rem;outline:none;resize:none"></textarea></div>
+    <button class="btn-admin-primary" onclick="saveEventoSA('${id||''}')">Guardar evento</button>`;
+
+  if (id) loadEventoFormData(id);
+  document.getElementById('modal-overlay').classList.add('open');
+};
+
+async function loadEventoFormData(id) {
+  const snap = await getDoc(doc(db, 'eventos', id));
+  if (!snap.exists()) return;
+  const e = snap.data();
+  document.getElementById('sa-ev-titulo').value = e.titulo||'';
+  document.getElementById('sa-ev-fecha').value = e.fecha||'';
+  document.getElementById('sa-ev-desc').value = e.descripcion||'';
+  if (e.imagen) {
+    const prev = document.getElementById('sa-ev-img-prev');
+    prev.src = e.imagen; prev.style.display = 'block';
+  }
+}
+
+window.saveEventoSA = async function(id) {
+  const titulo = document.getElementById('sa-ev-titulo').value.trim();
+  if (!titulo) { showToast('El título es obligatorio', 'error'); return; }
+  const imgFile = document.getElementById('sa-ev-img-input')?.files?.[0];
+  let imagenUrl = '';
+  if (imgFile) { imagenUrl = await uploadToCloudinary(imgFile); }
+  else if (id) {
+    const snap = await getDoc(doc(db, 'eventos', id));
+    imagenUrl = snap.data()?.imagen || '';
+  }
+  const data = {
+    titulo, fecha: document.getElementById('sa-ev-fecha').value.trim(),
+    descripcion: document.getElementById('sa-ev-desc').value.trim(),
+    ...(imagenUrl && { imagen: imagenUrl })
+  };
+  try {
+    if (id) { await updateDoc(doc(db, 'eventos', id), data); }
+    else { await addDoc(collection(db, 'eventos'), data); }
+    closeModal(); showToast('Evento guardado ✓', 'success');
+    loadSAEventos();
+  } catch(e) { showToast('Error al guardar', 'error'); }
+};
+
+window.deleteEvento = async function(id) {
+  if (!confirm('¿Eliminar evento?')) return;
+  try {
+    const { deleteDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+    await deleteDoc(doc(db, 'eventos', id));
+    showToast('Eliminado', 'success'); loadSAEventos();
+  } catch(e) { showToast('Error', 'error'); }
+};
+
+// ---- EDIT USER ----
+window.editUserRole = async function(uid, currentRol) {
+  const roles = ['cliente', 'negocio', 'superadmin'];
+  const content = document.getElementById('modal-content');
+  content.innerHTML = `
+    <div class="modal-title">Cambiar rol</div>
+    <div class="modal-sub">Seleccioná el nuevo rol para este usuario</div>
+    ${roles.map(r => `
+      <button class="btn-admin-primary" style="background:${r===currentRol?'var(--gold)':'var(--black-3)'};color:${r===currentRol?'var(--black)':'var(--white)'};border:1px solid var(--gray-2);margin-bottom:8px"
+        onclick="setUserRole('${uid}','${r}')">
+        ${r.charAt(0).toUpperCase() + r.slice(1)} ${r===currentRol?'(actual)':''}
+      </button>`).join('')}
+    ${currentRol === 'negocio' ? `
+    <div class="input-group" style="margin-top:8px">
+      <label>ID del negocio asignado</label>
+      <input type="text" id="user-negocio-id" placeholder="ID del negocio en Firestore">
+    </div>` : ''}`;
+  document.getElementById('modal-overlay').classList.add('open');
+};
+
+window.setUserRole = async function(uid, rol) {
+  try {
+    const data = { rol };
+    const negocioId = document.getElementById('user-negocio-id')?.value?.trim();
+    if (rol === 'negocio' && negocioId) data.negocioId = negocioId;
+    await updateDoc(doc(db, 'usuarios', uid), data);
+    closeModal(); showToast('Rol actualizado ✓', 'success');
+    loadSAUsuarios();
+  } catch(e) { showToast('Error', 'error'); }
+};
+
+window.editUserPoints = async function(uid, currentPts) {
+  const content = document.getElementById('modal-content');
+  content.innerHTML = `
+    <div class="modal-title">Editar puntos</div>
+    <div class="input-group"><label>Puntos</label><input type="number" id="edit-pts-val" value="${currentPts}"></div>
+    <button class="btn-admin-primary" onclick="setUserPoints('${uid}')">Guardar</button>`;
+  document.getElementById('modal-overlay').classList.add('open');
+};
+
+window.setUserPoints = async function(uid) {
+  const pts = parseInt(document.getElementById('edit-pts-val').value);
+  if (isNaN(pts)) return;
+  try {
+    await updateDoc(doc(db, 'usuarios', uid), { puntos: pts });
+    closeModal(); showToast('Puntos actualizados ✓', 'success');
+    loadSAUsuarios();
+  } catch(e) { showToast('Error', 'error'); }
+};
+
+// ---- NEGOCIO ADMIN ----
+window.openNegocioAdmin = async function() {
+  currentNegocioAdminId = currentUserData?.negocioId;
+  if (!currentNegocioAdminId) {
+    showToast('No tenés un negocio asignado', 'error'); return;
+  }
+  const snap = await getDoc(doc(db, 'negocios', currentNegocioAdminId));
+  if (!snap.exists()) { showToast('Negocio no encontrado', 'error'); return; }
+  const b = snap.data();
+  document.getElementById('na-biz-name').textContent = b.nombre;
+  // Load form data
+  document.getElementById('na-desc').value = b.descripcion||'';
+  document.getElementById('na-whatsapp').value = b.whatsapp||'';
+  document.getElementById('na-promo').value = b.promociones||'';
+  document.getElementById('na-h-lv').value = b.horarios?.['Lun–Vie']||'';
+  document.getElementById('na-h-sab').value = b.horarios?.['Sábados']||'';
+  document.getElementById('na-h-dom').value = b.horarios?.['Domingos']||'';
+  if (b.portada) {
+    const prev = document.getElementById('na-portada-preview');
+    prev.src = b.portada; prev.style.display = 'block';
+  }
+  navigateTo('negocio-admin-screen');
+};
+
+window.saveNegocioInfo = async function() {
+  if (!currentNegocioAdminId) return;
+  const portadaFile = document.getElementById('na-portada-input')?.files?.[0];
+  let portadaUrl = '';
+  if (portadaFile) { portadaUrl = await uploadToCloudinary(portadaFile); }
+  const data = {
+    descripcion: document.getElementById('na-desc').value.trim(),
+    whatsapp: document.getElementById('na-whatsapp').value.trim(),
+    promociones: document.getElementById('na-promo').value.trim(),
+    horarios: {
+      'Lun–Vie': document.getElementById('na-h-lv').value.trim(),
+      'Sábados': document.getElementById('na-h-sab').value.trim(),
+      'Domingos': document.getElementById('na-h-dom').value.trim(),
+    },
+    ...(portadaUrl && { portada: portadaUrl })
+  };
+  try {
+    await updateDoc(doc(db, 'negocios', currentNegocioAdminId), data);
+    showToast('Cambios guardados ✓', 'success');
+  } catch(e) { showToast('Error al guardar', 'error'); }
+};
+
+// ---- CÓDIGOS (negocio admin) ----
+async function loadNACodigos() {
+  if (!currentNegocioAdminId) return;
+  try {
+    const q = query(collection(db, 'codigos'),
+      where('negocio', '==', currentNegocioAdminId),
+      where('estado', '==', 'pendiente'));
+    const snap = await getDocs(q);
+    const container = document.getElementById('na-codigos-list');
+    if (snap.empty) {
+      container.innerHTML = '<div style="color:var(--gray-3);font-size:0.82rem;text-align:center;padding:16px">Sin códigos pendientes</div>';
+      return;
+    }
+    container.innerHTML = '';
+    snap.forEach(d => {
+      const c = { id: d.id, ...d.data() };
+      container.innerHTML += `
+        <div class="codigo-item">
+          <div>
+            <div class="codigo-code">${c.codigo}</div>
+            <div class="codigo-meta">${formatDate(c.fecha)}</div>
+          </div>
+          <button class="btn-validate-code" onclick="validarCodigoDirecto('${c.id}','${c.usuarioId}','${c.codigo}')">
+            Validar +100pts
+          </button>
+        </div>`;
+    });
+  } catch(e) {}
+}
+
+window.validarCodigo = async function() {
+  const codigo = document.getElementById('na-code-input').value.trim().toUpperCase();
+  if (!codigo) return;
+  const resultEl = document.getElementById('na-validation-result');
+  const titleEl = document.getElementById('na-val-title');
+  const subEl = document.getElementById('na-val-sub');
+  const confirmBtn = document.getElementById('na-val-confirm-btn');
+  currentValidacionCodigo = null;
+  try {
+    const q = query(collection(db, 'codigos'), where('codigo', '==', codigo));
+    const snap = await getDocs(q);
+    if (snap.empty) {
+      resultEl.className = 'validation-result error'; resultEl.style.display = 'block';
+      titleEl.textContent = '❌ Código no encontrado';
+      subEl.textContent = 'Verificá el código e intentá de nuevo';
+      confirmBtn.style.display = 'none'; return;
+    }
+    const docSnap = snap.docs[0];
+    const c = { id: docSnap.id, ...docSnap.data() };
+    if (c.estado !== 'pendiente') {
+      resultEl.className = 'validation-result error'; resultEl.style.display = 'block';
+      titleEl.textContent = `❌ Código ${c.estado}`;
+      subEl.textContent = 'Este código ya fue usado o venció';
+      confirmBtn.style.display = 'none'; return;
+    }
+    // Check expiry
+    const vence = c.vencimiento?.toDate ? c.vencimiento.toDate() : new Date(c.vencimiento);
+    if (vence < new Date()) {
+      await updateDoc(doc(db, 'codigos', c.id), { estado: 'vencido' });
+      resultEl.className = 'validation-result error'; resultEl.style.display = 'block';
+      titleEl.textContent = '❌ Código vencido';
+      subEl.textContent = 'Este código ya expiró (24hs)';
+      confirmBtn.style.display = 'none'; return;
+    }
+    currentValidacionCodigo = c;
+    resultEl.className = 'validation-result success'; resultEl.style.display = 'block';
+    titleEl.textContent = '✓ Código válido';
+    subEl.textContent = `Usuario: ${c.usuarioId.substring(0,8)}... · Generado: ${formatDate(c.fecha)}`;
+    confirmBtn.style.display = 'block';
+  } catch(e) { showToast('Error al validar', 'error'); }
+};
+
+window.confirmarValidacion = async function() {
+  if (!currentValidacionCodigo) return;
+  await procesarValidacion(currentValidacionCodigo.id, currentValidacionCodigo.usuarioId);
+  document.getElementById('na-validation-result').style.display = 'none';
+  document.getElementById('na-code-input').value = '';
+  currentValidacionCodigo = null;
+};
+
+window.validarCodigoDirecto = async function(codigoId, usuarioId, codigo) {
+  if (!confirm(`¿Validar código ${codigo} y sumar 100 puntos al cliente?`)) return;
+  await procesarValidacion(codigoId, usuarioId);
+  loadNACodigos();
+};
+
+async function procesarValidacion(codigoId, usuarioId) {
+  try {
+    await updateDoc(doc(db, 'codigos', codigoId), { estado: 'validado' });
+    // Sumar 100 puntos al usuario
+    await updateDoc(doc(db, 'usuarios', usuarioId), { puntos: increment(100) });
+    // Actualizar métricas del negocio
+    if (currentNegocioAdminId) {
+      await updateDoc(doc(db, 'negocios', currentNegocioAdminId), { codigosValidados: increment(1) });
+    }
+    showToast('¡Código validado! +100 pts al cliente ✓', 'success');
+  } catch(e) { showToast('Error al procesar', 'error'); }
+}
+
+// ---- NEGOCIO ADMIN MÉTRICAS ----
+async function loadNAMetricas() {
+  if (!currentNegocioAdminId) return;
+  try {
+    const snap = await getDoc(doc(db, 'negocios', currentNegocioAdminId));
+    const b = snap.data();
+    document.getElementById('na-m-visitas').textContent = b.visitas||0;
+    document.getElementById('na-m-clicks').textContent = b.clicsWhatsApp||0;
+    document.getElementById('na-m-codigos').textContent = b.codigosValidados||0;
+    // Canjes de este negocio
+    const q = query(collection(db, 'canjes'), where('negocio', '==', b.nombre));
+    const cSnap = await getDocs(q);
+    document.getElementById('na-m-canjes').textContent = cSnap.size;
+  } catch(e) {}
+}
+
+// ---- CLOUDINARY UPLOAD ----
+async function uploadToCloudinary(file) {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('upload_preset', cloudinaryPreset);
+  formData.append('cloud_name', cloudinaryCloud);
+  try {
+    showToast('Subiendo imagen...', '');
+    const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudinaryCloud}/image/upload`, {
+      method: 'POST', body: formData
+    });
+    const data = await res.json();
+    showToast('Imagen subida ✓', 'success');
+    return data.secure_url;
+  } catch(e) {
+    showToast('Error al subir imagen', 'error');
+    return '';
+  }
+}
+
+// ---- IMAGE PREVIEW ----
+window.previewImg = function(input, previewId) {
+  const file = input.files?.[0];
+  if (!file) return;
+  const prev = document.getElementById(previewId);
+  const reader = new FileReader();
+  reader.onload = (e) => { prev.src = e.target.result; prev.style.display = 'block'; };
+  reader.readAsDataURL(file);
+};
+
+window.previewAndUpload = function(input, previewId, field) {
+  previewImg(input, previewId);
+};
+
+// Llamar checkAdminAccess después de cargar perfil
+const _origLoadProfile = loadProfile;
+// Patch showApp para llamar checkAdminAccess
+const _origShowApp = showApp;
+
+
+// ======== FASE 3: MEJORAS UX & TIEMPO REAL ========
+
+// ---- PUNTOS EN TIEMPO REAL ----
+let unsubscribeUser = null;
+
+function suscribirPuntosRealtime(uid) {
+  if (unsubscribeUser) unsubscribeUser();
+  const { onSnapshot } = window._firestoreExtras || {};
+  // Usamos polling liviano cada 30s como alternativa sin onSnapshot extra
+  const interval = setInterval(async () => {
+    if (!currentUser) { clearInterval(interval); return; }
+    try {
+      const snap = await getDoc(doc(db, 'usuarios', currentUser.uid));
+      if (snap.exists()) {
+        const newPts = snap.data().puntos;
+        if (newPts !== currentUserData?.puntos) {
+          currentUserData.puntos = newPts;
+          updatePoints();
+        }
+      }
+    } catch(e) {}
+  }, 30000);
+  return interval;
+}
+
+// ---- LIMPIAR CÓDIGOS VENCIDOS ----
+async function limpiarCodigosVencidos() {
+  try {
+    const q = query(collection(db, 'codigos'),
+      where('usuarioId', '==', currentUser.uid),
+      where('estado', '==', 'pendiente'));
+    const snap = await getDocs(q);
+    const ahora = new Date();
+    snap.forEach(async (d) => {
+      const c = d.data();
+      const vence = c.vencimiento?.toDate ? c.vencimiento.toDate() : new Date(c.vencimiento);
+      if (vence < ahora) {
+        await updateDoc(doc(db, 'codigos', d.id), { estado: 'vencido' });
+      }
+    });
+  } catch(e) {}
+}
+
+// ---- REFRESH PUNTOS MANUAL ----
+window.refreshUserData = async function() {
+  if (!currentUser) return;
+  try {
+    const snap = await getDoc(doc(db, 'usuarios', currentUser.uid));
+    if (snap.exists()) {
+      currentUserData = snap.data();
+      updatePoints();
+      showToast('Puntos actualizados ✓', 'success');
+    }
+  } catch(e) {}
+};
+
+// Hacer la tarjeta de puntos tappable para refresh
+document.querySelector('.points-card')?.addEventListener('click', refreshUserData);
+
+// ---- MEJORA: CONFIRMAR ANTES DE CERRAR SESIÓN ----
+document.getElementById('btn-logout').addEventListener('click', async () => {
+  const content = document.getElementById('modal-content');
+  content.innerHTML = `
+    <div class="modal-title">Cerrar sesión</div>
+    <div class="modal-sub">¿Seguro que querés salir de Club Gosén?</div>
+    <button class="btn-primary" style="margin-bottom:12px" onclick="confirmLogout()">Sí, cerrar sesión</button>
+    <button class="btn-outline" style="width:100%;justify-content:center;padding:14px" onclick="closeModal()">Cancelar</button>`;
+  document.getElementById('modal-overlay').classList.add('open');
+});
+
+window.confirmLogout = async function() {
+  closeModal();
+  if (unsubscribeUser) unsubscribeUser();
+  await signOut(auth);
+};
+
+// ---- MEJORA: BÚSQUEDA DE NEGOCIOS ----
+window.filtrarNegocios = function(query) {
+  const cards = document.querySelectorAll('.business-card');
+  cards.forEach(card => {
+    const name = card.querySelector('.business-name')?.textContent?.toLowerCase() || '';
+    const cat = card.querySelector('.business-category')?.textContent?.toLowerCase() || '';
+    card.style.display = (name.includes(query.toLowerCase()) || cat.includes(query.toLowerCase())) ? 'block' : 'none';
+  });
+};
+
+// ---- MEJORA: PULL TO REFRESH EN HOME ----
+let touchStartY = 0;
+let isPulling = false;
+
+document.getElementById('home-screen').addEventListener('touchstart', (e) => {
+  touchStartY = e.touches[0].clientY;
+}, { passive: true });
+
+document.getElementById('home-screen').addEventListener('touchend', async (e) => {
+  const diff = e.changedTouches[0].clientY - touchStartY;
+  if (diff > 80 && window.scrollY === 0) {
+    showToast('Actualizando...', '');
+    await refreshUserData();
+    await loadHomeData();
+  }
+}, { passive: true });
+
+// ---- MEJORA: CONTADOR DE BENEFICIOS DISPONIBLES ----
+async function updateBeneficiosCount() {
+  try {
+    const snap = await getDocs(collection(db, 'beneficios'));
+    const pts = currentUserData?.puntos || 0;
+    let disponibles = 0;
+    snap.forEach(d => {
+      if (d.data().activo && pts >= d.data().puntosNecesarios) disponibles++;
+    });
+    if (disponibles > 0) {
+      const navBeneficios = document.querySelector('[data-screen="benefits-screen"]');
+      if (navBeneficios && !navBeneficios.querySelector('.admin-nav-dot')) {
+        const dot = document.createElement('div');
+        dot.className = 'admin-nav-dot';
+        navBeneficios.appendChild(dot);
+      }
+    }
+  } catch(e) {}
+}
+
+// ---- MEJORA: ONBOARDING PARA NUEVOS USUARIOS ----
+function showWelcomeModal(nombre) {
+  const content = document.getElementById('modal-content');
+  const firstName = nombre?.split(' ')[0] || '';
+  content.innerHTML = `
+    <div style="text-align:center;padding:16px 0">
+      <div style="font-size:3rem;margin-bottom:16px">🎉</div>
+      <div class="modal-title" style="text-align:center">¡Bienvenido${firstName ? ', ' + firstName : ''}!</div>
+      <div class="modal-sub" style="text-align:center;margin-bottom:24px">
+        Sumaste <strong style="color:var(--gold)">500 puntos</strong> de bienvenida.<br>
+        Ya podés explorar beneficios y negocios de Gosén.
+      </div>
+      <div style="background:var(--black-3);border-radius:var(--radius-md);padding:20px;margin-bottom:20px">
+        <div style="font-size:0.72rem;color:var(--gray-3);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:12px">¿Cómo funciona?</div>
+        <div style="display:flex;flex-direction:column;gap:10px;text-align:left">
+          <div style="display:flex;gap:10px;align-items:center;font-size:0.82rem">
+            <span style="font-size:1.2rem">🛍</span>
+            <span>Visitá los negocios de Gosén y contactalos por WhatsApp</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;font-size:0.82rem">
+            <span style="font-size:1.2rem">⭐</span>
+            <span>Cada compra validada suma <strong style="color:var(--gold)">100 puntos</strong></span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;font-size:0.82rem">
+            <span style="font-size:1.2rem">🎁</span>
+            <span>Canjeá puntos por beneficios exclusivos</span>
+          </div>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="closeModal()">¡Explorar Gosén!</button>
+    </div>`;
   document.getElementById('modal-overlay').classList.add('open');
 }
 
-window.selectStar = function(val) {
-  window._selectedStars = val;
-  document.querySelectorAll('.star-btn').forEach(btn => {
-    btn.classList.toggle('active', parseInt(btn.dataset.val) <= val);
-  });
-};
-
-window.enviarResena = async function(negocioId, negocioNombre) {
-  const estrellas = window._selectedStars || 0;
-  if (!estrellas) { showToast('Seleccioná una calificación', 'error'); return; }
-  const texto = document.getElementById('resena-texto').value.trim();
-  const nombre = currentUserData?.nombre || currentUser?.displayName || 'Cliente';
-
-  try {
-    await addDoc(collection(db, 'resenas'), {
-      negocioId, negocioNombre,
-      usuarioId: currentUser.uid,
-      autorNombre: nombre,
-      estrellas, texto,
-      estado: 'pendiente',
-      fecha: serverTimestamp()
-    });
-    closeModal();
-    showToast('¡Reseña enviada! Será visible tras la aprobación ✓', 'success');
-  } catch(e) { showToast('Error al enviar', 'error'); }
-};
-
-// ---- MODERACIÓN (superadmin) ----
-async function loadResenasPendientes() {
-  try {
-    const q = query(collection(db, 'resenas'), where('estado', '==', 'pendiente'));
-    const snap = await getDocs(q);
-    return snap.docs.map(d => ({ id: d.id, ...d.data() }));
-  } catch(e) { return []; }
+// ---- PATCH: showApp para agregar mejoras Fase 3 ----
+const _origShowAppF3 = showApp;
+function showApp() {
+  document.getElementById('auth-screen').classList.remove('active');
+  document.getElementById('bottom-nav').classList.add('visible');
+  navigateTo('home-screen');
+  loadHomeData();
+  checkPWA();
+  trackVisit();
+  // Fase 3 extras
+  setTimeout(() => {
+    limpiarCodigosVencidos();
+    updateBeneficiosCount();
+  }, 2000);
 }
 
-window.aprobarResena = async function(id, containerId) {
-  try {
-    await updateDoc(doc(db, 'resenas', id), { estado: 'aprobada' });
-    showToast('Reseña aprobada ✓', 'success');
-    document.getElementById(containerId)?.remove();
-  } catch(e) { showToast('Error', 'error'); }
-};
-
-window.eliminarResena = async function(id, containerId) {
-  try {
-    const { deleteDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
-    await deleteDoc(doc(db, 'resenas', id));
-    showToast('Reseña eliminada', 'success');
-    document.getElementById(containerId)?.remove();
-  } catch(e) { showToast('Error', 'error'); }
-};
-
-// ---- Cargar panel de moderación en superadmin ----
-async function loadSAResenas() {
-  const pendientes = await loadResenasPendientes();
-  const container = document.getElementById('sa-resenas-list');
-  if (!container) return;
-
-  if (pendientes.length === 0) {
-    container.innerHTML = '<div style="color:var(--gray-3);font-size:0.82rem;text-align:center;padding:20px">Sin reseñas pendientes</div>';
-    return;
+// ---- PATCH: loadUserData para mostrar bienvenida ----
+const _origLoadUserData = loadUserData;
+async function loadUserData(user) {
+  const ref = doc(db, 'usuarios', user.uid);
+  const snap = await getDoc(ref);
+  if (snap.exists()) {
+    currentUserData = snap.data();
+  } else {
+    const data = {
+      uid: user.uid, nombre: user.displayName || '',
+      email: user.email, fotoPerfil: user.photoURL || '',
+      puntos: 500, fechaRegistro: serverTimestamp(), rol: 'cliente'
+    };
+    await setDoc(ref, data);
+    currentUserData = data;
+    // Mostrar modal de bienvenida después de cargar
+    setTimeout(() => showWelcomeModal(data.nombre), 1500);
   }
-
-  container.innerHTML = '';
-  pendientes.forEach(r => {
-    const divId = `resena-${r.id}`;
-    container.innerHTML += `
-      <div class="admin-card" id="${divId}">
-        <div class="admin-card-header">
-          <div class="admin-card-title">${r.negocioNombre}</div>
-          ${renderStars(r.estrellas, 13)}
-        </div>
-        <div class="admin-card-sub">${r.autorNombre} · ${formatDate(r.fecha)}</div>
-        ${r.texto ? `<div style="font-size:0.82rem;color:var(--gray-3);margin-top:8px;line-height:1.5">"${r.texto}"</div>` : ''}
-        <div style="display:flex;gap:8px;margin-top:12px">
-          <button class="btn-moderar-ok" onclick="aprobarResena('${r.id}','${divId}')">✓ Aprobar</button>
-          <button class="btn-moderar-delete" onclick="eliminarResena('${r.id}','${divId}')">✗ Eliminar</button>
-        </div>
-      </div>`;
-  });
 }
+
+
+
+// ======== PROGRESO Y PROXIMIDAD DE BENEFICIOS ========
+
+async function checkProximidadBeneficios() {
+  if (!currentUserData) return;
+  try {
+    const snap = await getDocs(collection(db, 'beneficios'));
+    const pts = currentUserData?.puntos || 0;
+    let masProximo = null;
+    let menorDiferencia = Infinity;
+
+    snap.forEach(d => {
+      const b = { id: d.id, ...d.data() };
+      if (!b.activo) return;
+      const diff = b.puntosNecesarios - pts;
+      if (diff > 0 && diff < menorDiferencia) {
+        menorDiferencia = diff;
+        masProximo = b;
+      }
+    });
+
+    const alertEl = document.getElementById('proximity-alert');
+    const titleEl = document.getElementById('proximity-title');
+    const subEl = document.getElementById('proximity-sub');
+
+    if (masProximo) {
+      const pts_needed = masProximo.puntosNecesarios;
+      const porcentaje = Math.round((pts / pts_needed) * 100);
+
+      if (menorDiferencia <= 300) {
+        // Muy cerca — mostrar alerta
+        titleEl.textContent = `¡Te faltan solo ${menorDiferencia} puntos!`;
+        subEl.textContent = `${masProximo.icono || '⭐'} ${masProximo.titulo} en ${masProximo.negocio} — necesitás ${pts_needed} pts`;
+        alertEl.classList.add('show');
+      } else if (porcentaje >= 50) {
+        // Más del 50% del camino
+        titleEl.textContent = `Vas por buen camino 💪`;
+        subEl.textContent = `Te faltan ${menorDiferencia} pts para ${masProximo.titulo} en ${masProximo.negocio}`;
+        alertEl.classList.add('show');
+      } else {
+        alertEl.classList.remove('show');
+      }
+    } else if (snap.size > 0) {
+      // Tiene puntos suficientes para algún beneficio
+      titleEl.textContent = '¡Tenés puntos para canjear! 🎁';
+      subEl.textContent = 'Visitá la sección Beneficios y canjeá ahora';
+      alertEl.classList.add('show');
+    }
+  } catch(e) {}
+}
+
+// Agregar barra de progreso a cada beneficio en la lista completa
+function renderBeneficioConProgreso(b, pts) {
+  const ptsNecesarios = b.puntosNecesarios;
+  const porcentaje = Math.min(100, Math.round((pts / ptsNecesarios) * 100));
+  const diff = ptsNecesarios - pts;
+  const canCanjear = pts >= ptsNecesarios;
+  const esCerca = diff > 0 && diff <= 200;
+
+  return `
+    <div class="benefit-full-card">
+      <div class="benefit-icon-wrap"><span>${b.icono || '⭐'}</span></div>
+      <div class="benefit-full-info">
+        <div class="benefit-full-name">${b.titulo}</div>
+        <div class="benefit-full-biz">${b.negocio}</div>
+        <div class="benefit-full-pts">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          ${ptsNecesarios} puntos
+        </div>
+        <div class="benefit-progress-wrap">
+          <div class="benefit-progress-bar">
+            <div class="benefit-progress-fill" style="width:${porcentaje}%"></div>
+          </div>
+          <div class="benefit-progress-text ${esCerca ? 'close' : ''}">
+            ${canCanjear
+              ? '✓ ¡Podés canjearlo ahora!'
+              : esCerca
+                ? `¡Te faltan solo ${diff} puntos!`
+                : `${pts} / ${ptsNecesarios} pts · ${porcentaje}%`
+            }
+          </div>
+        </div>
+      </div>
+      <div class="benefit-cta">
+        <button class="btn-canjear" style="${!canCanjear ? 'opacity:0.3;pointer-events:none' : ''}"
+          onclick="canjearBeneficio('${b.id}','${b.titulo}','${b.negocio}',${ptsNecesarios})">
+          Canjear
+        </button>
+      </div>
+    </div>`;
+}
+
+
+
+
+// ======== FASE 3: MEJORAS UX & TIEMPO REAL ========
+
+// ---- PUNTOS EN TIEMPO REAL ----
+let unsubscribeUser = null;
+
+function suscribirPuntosRealtime(uid) {
+  if (unsubscribeUser) unsubscribeUser();
+  const { onSnapshot } = window._firestoreExtras || {};
+  // Usamos polling liviano cada 30s como alternativa sin onSnapshot extra
+  const interval = setInterval(async () => {
+    if (!currentUser) { clearInterval(interval); return; }
+    try {
+      const snap = await getDoc(doc(db, 'usuarios', currentUser.uid));
+      if (snap.exists()) {
+        const newPts = snap.data().puntos;
+        if (newPts !== currentUserData?.puntos) {
+          currentUserData.puntos = newPts;
+          updatePoints();
+        }
+      }
+    } catch(e) {}
+  }, 30000);
+  return interval;
+}
+
+// ---- LIMPIAR CÓDIGOS VENCIDOS ----
+async function limpiarCodigosVencidos() {
+  try {
+    const q = query(collection(db, 'codigos'),
+      where('usuarioId', '==', currentUser.uid),
+      where('estado', '==', 'pendiente'));
+    const snap = await getDocs(q);
+    const ahora = new Date();
+    snap.forEach(async (d) => {
+      const c = d.data();
+      const vence = c.vencimiento?.toDate ? c.vencimiento.toDate() : new Date(c.vencimiento);
+      if (vence < ahora) {
+        await updateDoc(doc(db, 'codigos', d.id), { estado: 'vencido' });
+      }
+    });
+  } catch(e) {}
+}
+
+// ---- REFRESH PUNTOS MANUAL ----
+window.refreshUserData = async function() {
+  if (!currentUser) return;
+  try {
+    const snap = await getDoc(doc(db, 'usuarios', currentUser.uid));
+    if (snap.exists()) {
+      currentUserData = snap.data();
+      updatePoints();
+      showToast('Puntos actualizados ✓', 'success');
+    }
+  } catch(e) {}
+};
+
+// Hacer la tarjeta de puntos tappable para refresh
+document.querySelector('.points-card')?.addEventListener('click', refreshUserData);
+
+// ---- MEJORA: CONFIRMAR ANTES DE CERRAR SESIÓN ----
+document.getElementById('btn-logout').addEventListener('click', async () => {
+  const content = document.getElementById('modal-content');
+  content.innerHTML = `
+    <div class="modal-title">Cerrar sesión</div>
+    <div class="modal-sub">¿Seguro que querés salir de Club Gosén?</div>
+    <button class="btn-primary" style="margin-bottom:12px" onclick="confirmLogout()">Sí, cerrar sesión</button>
+    <button class="btn-outline" style="width:100%;justify-content:center;padding:14px" onclick="closeModal()">Cancelar</button>`;
+  document.getElementById('modal-overlay').classList.add('open');
+});
+
+window.confirmLogout = async function() {
+  closeModal();
+  if (unsubscribeUser) unsubscribeUser();
+  await signOut(auth);
+};
+
+// ---- MEJORA: BÚSQUEDA DE NEGOCIOS ----
+window.filtrarNegocios = function(query) {
+  const cards = document.querySelectorAll('.business-card');
+  cards.forEach(card => {
+    const name = card.querySelector('.business-name')?.textContent?.toLowerCase() || '';
+    const cat = card.querySelector('.business-category')?.textContent?.toLowerCase() || '';
+    card.style.display = (name.includes(query.toLowerCase()) || cat.includes(query.toLowerCase())) ? 'block' : 'none';
+  });
+};
+
+// ---- MEJORA: PULL TO REFRESH EN HOME ----
+let touchStartY = 0;
+let isPulling = false;
+
+document.getElementById('home-screen').addEventListener('touchstart', (e) => {
+  touchStartY = e.touches[0].clientY;
+}, { passive: true });
+
+document.getElementById('home-screen').addEventListener('touchend', async (e) => {
+  const diff = e.changedTouches[0].clientY - touchStartY;
+  if (diff > 80 && window.scrollY === 0) {
+    showToast('Actualizando...', '');
+    await refreshUserData();
+    await loadHomeData();
+  }
+}, { passive: true });
+
+// ---- MEJORA: CONTADOR DE BENEFICIOS DISPONIBLES ----
+async function updateBeneficiosCount() {
+  try {
+    const snap = await getDocs(collection(db, 'beneficios'));
+    const pts = currentUserData?.puntos || 0;
+    let disponibles = 0;
+    snap.forEach(d => {
+      if (d.data().activo && pts >= d.data().puntosNecesarios) disponibles++;
+    });
+    if (disponibles > 0) {
+      const navBeneficios = document.querySelector('[data-screen="benefits-screen"]');
+      if (navBeneficios && !navBeneficios.querySelector('.admin-nav-dot')) {
+        const dot = document.createElement('div');
+        dot.className = 'admin-nav-dot';
+        navBeneficios.appendChild(dot);
+      }
+    }
+  } catch(e) {}
+}
+
+// ---- MEJORA: ONBOARDING PARA NUEVOS USUARIOS ----
+function showWelcomeModal(nombre) {
+  const content = document.getElementById('modal-content');
+  const firstName = nombre?.split(' ')[0] || '';
+  content.innerHTML = `
+    <div style="text-align:center;padding:16px 0">
+      <div style="font-size:3rem;margin-bottom:16px">🎉</div>
+      <div class="modal-title" style="text-align:center">¡Bienvenido${firstName ? ', ' + firstName : ''}!</div>
+      <div class="modal-sub" style="text-align:center;margin-bottom:24px">
+        Sumaste <strong style="color:var(--gold)">500 puntos</strong> de bienvenida.<br>
+        Ya podés explorar beneficios y negocios de Gosén.
+      </div>
+      <div style="background:var(--black-3);border-radius:var(--radius-md);padding:20px;margin-bottom:20px">
+        <div style="font-size:0.72rem;color:var(--gray-3);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:12px">¿Cómo funciona?</div>
+        <div style="display:flex;flex-direction:column;gap:10px;text-align:left">
+          <div style="display:flex;gap:10px;align-items:center;font-size:0.82rem">
+            <span style="font-size:1.2rem">🛍</span>
+            <span>Visitá los negocios de Gosén y contactalos por WhatsApp</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;font-size:0.82rem">
+            <span style="font-size:1.2rem">⭐</span>
+            <span>Cada compra validada suma <strong style="color:var(--gold)">100 puntos</strong></span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;font-size:0.82rem">
+            <span style="font-size:1.2rem">🎁</span>
+            <span>Canjeá puntos por beneficios exclusivos</span>
+          </div>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="closeModal()">¡Explorar Gosén!</button>
+    </div>`;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+// ---- PATCH: showApp para agregar mejoras Fase 3 ----
+const _origShowAppF3 = showApp;
+function showApp() {
+  document.getElementById('auth-screen').classList.remove('active');
+  document.getElementById('bottom-nav').classList.add('visible');
+  navigateTo('home-screen');
+  loadHomeData();
+  checkPWA();
+  trackVisit();
+  // Fase 3 extras
+  setTimeout(() => {
+    limpiarCodigosVencidos();
+    updateBeneficiosCount();
+  }, 2000);
+}
+
+// ---- PATCH: loadUserData para mostrar bienvenida ----
+const _origLoadUserData = loadUserData;
+async function loadUserData(user) {
+  const ref = doc(db, 'usuarios', user.uid);
+  const snap = await getDoc(ref);
+  if (snap.exists()) {
+    currentUserData = snap.data();
+  } else {
+    const data = {
+      uid: user.uid, nombre: user.displayName || '',
+      email: user.email, fotoPerfil: user.photoURL || '',
+      puntos: 500, fechaRegistro: serverTimestamp(), rol: 'cliente'
+    };
+    await setDoc(ref, data);
+    currentUserData = data;
+    // Mostrar modal de bienvenida después de cargar
+    setTimeout(() => showWelcomeModal(data.nombre), 1500);
+  }
+}
+
+
+
+// ======== PROGRESO Y PROXIMIDAD DE BENEFICIOS ========
+
+async function checkProximidadBeneficios() {
+  if (!currentUserData) return;
+  try {
+    const snap = await getDocs(collection(db, 'beneficios'));
+    const pts = currentUserData?.puntos || 0;
+    let masProximo = null;
+    let menorDiferencia = Infinity;
+
+    snap.forEach(d => {
+      const b = { id: d.id, ...d.data() };
+      if (!b.activo) return;
+      const diff = b.puntosNecesarios - pts;
+      if (diff > 0 && diff < menorDiferencia) {
+        menorDiferencia = diff;
+        masProximo = b;
+      }
+    });
+
+    const alertEl = document.getElementById('proximity-alert');
+    const titleEl = document.getElementById('proximity-title');
+    const subEl = document.getElementById('proximity-sub');
+
+    if (masProximo) {
+      const pts_needed = masProximo.puntosNecesarios;
+      const porcentaje = Math.round((pts / pts_needed) * 100);
+
+      if (menorDiferencia <= 300) {
+        // Muy cerca — mostrar alerta
+        titleEl.textContent = `¡Te faltan solo ${menorDiferencia} puntos!`;
+        subEl.textContent = `${masProximo.icono || '⭐'} ${masProximo.titulo} en ${masProximo.negocio} — necesitás ${pts_needed} pts`;
+        alertEl.classList.add('show');
+      } else if (porcentaje >= 50) {
+        // Más del 50% del camino
+        titleEl.textContent = `Vas por buen camino 💪`;
+        subEl.textContent = `Te faltan ${menorDiferencia} pts para ${masProximo.titulo} en ${masProximo.negocio}`;
+        alertEl.classList.add('show');
+      } else {
+        alertEl.classList.remove('show');
+      }
+    } else if (snap.size > 0) {
+      // Tiene puntos suficientes para algún beneficio
+      titleEl.textContent = '¡Tenés puntos para canjear! 🎁';
+      subEl.textContent = 'Visitá la sección Beneficios y canjeá ahora';
+      alertEl.classList.add('show');
+    }
+  } catch(e) {}
+}
+
+// Agregar barra de progreso a cada beneficio en la lista completa
+function renderBeneficioConProgreso(b, pts) {
+  const ptsNecesarios = b.puntosNecesarios;
+  const porcentaje = Math.min(100, Math.round((pts / ptsNecesarios) * 100));
+  const diff = ptsNecesarios - pts;
+  const canCanjear = pts >= ptsNecesarios;
+  const esCerca = diff > 0 && diff <= 200;
+
+  return `
+    <div class="benefit-full-card">
+      <div class="benefit-icon-wrap"><span>${b.icono || '⭐'}</span></div>
+      <div class="benefit-full-info">
+        <div class="benefit-full-name">${b.titulo}</div>
+        <div class="benefit-full-biz">${b.negocio}</div>
+        <div class="benefit-full-pts">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          ${ptsNecesarios} puntos
+        </div>
+        <div class="benefit-progress-wrap">
+          <div class="benefit-progress-bar">
+            <div class="benefit-progress-fill" style="width:${porcentaje}%"></div>
+          </div>
+          <div class="benefit-progress-text ${esCerca ? 'close' : ''}">
+            ${canCanjear
+              ? '✓ ¡Podés canjearlo ahora!'
+              : esCerca
+                ? `¡Te faltan solo ${diff} puntos!`
+                : `${pts} / ${ptsNecesarios} pts · ${porcentaje}%`
+            }
+          </div>
+        </div>
+      </div>
+      <div class="benefit-cta">
+        <button class="btn-canjear" style="${!canCanjear ? 'opacity:0.3;pointer-events:none' : ''}"
+          onclick="canjearBeneficio('${b.id}','${b.titulo}','${b.negocio}',${ptsNecesarios})">
+          Canjear
+        </button>
+      </div>
+    </div>`;
+}
+
+
+
+// ======== SISTEMA DE RESEÑAS ========
+
+
+
+
+// ---- Formulario para dejar reseña ----
+
+
+
+
+
+
 
 // ---- PWA MANIFEST (inline) ----
 const manifest = {
