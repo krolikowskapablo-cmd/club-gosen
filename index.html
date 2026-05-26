@@ -1007,6 +1007,45 @@ html, body {
   border-radius: 50%; position: absolute; top: 4px; right: 20px;
 }
 
+
+/* ---- PROGRESO BENEFICIOS ---- */
+.benefit-progress-wrap {
+  margin-top: 10px;
+}
+.benefit-progress-bar {
+  height: 3px; background: var(--gray-2);
+  border-radius: 2px; overflow: hidden; margin-bottom: 5px;
+}
+.benefit-progress-fill {
+  height: 100%; background: var(--gold);
+  border-radius: 2px; transition: width 0.6s ease;
+}
+.benefit-progress-text {
+  font-size: 0.65rem; color: var(--gray-3); letter-spacing: 0.05em;
+}
+.benefit-progress-text.close {
+  color: var(--gold);
+}
+
+/* ---- ALERTA PROXIMIDAD ---- */
+.proximity-alert {
+  margin: 0 24px 4px;
+  background: rgba(201,168,76,0.08);
+  border: 1px solid rgba(201,168,76,0.25);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  display: none;
+  animation: fadeUp 0.4s ease;
+}
+.proximity-alert.show { display: flex; align-items: center; gap: 12px; }
+.proximity-alert-icon { font-size: 1.4rem; flex-shrink: 0; }
+.proximity-alert-text { flex: 1; }
+.proximity-alert-title {
+  font-size: 0.82rem; color: var(--gold);
+  font-weight: 500; margin-bottom: 2px;
+}
+.proximity-alert-sub { font-size: 0.72rem; color: var(--gray-3); line-height: 1.4; }
+
 </style>
 </head>
 <body>
@@ -1114,6 +1153,14 @@ html, body {
       <div class="points-actions">
         <div class="points-action-btn" onclick="navigateTo('benefits-screen')">Ver beneficios</div>
         <div class="points-action-btn" onclick="navigateTo('canjes-screen')">Mis canjes</div>
+      </div>
+    </div>
+
+    <div class="proximity-alert" id="proximity-alert">
+      <div class="proximity-alert-icon">🎯</div>
+      <div class="proximity-alert-text">
+        <div class="proximity-alert-title" id="proximity-title"></div>
+        <div class="proximity-alert-sub" id="proximity-sub"></div>
       </div>
     </div>
 
@@ -1625,6 +1672,7 @@ async function loadHomeData() {
   loadBusinesses();
   loadBenefitsPreview();
   loadEventsPreview();
+  setTimeout(checkProximidadBeneficios, 1000);
 }
 
 function updateGreeting() {
@@ -1829,29 +1877,18 @@ async function loadBenefitsFull() {
     }
     container.innerHTML = '';
     const pts = currentUserData?.puntos || 0;
-    snap.forEach(docSnap => {
-      const b = { id: docSnap.id, ...docSnap.data() };
-      if (!b.activo) return;
-      const canCanjear = pts >= b.puntosNecesarios;
-      const card = document.createElement('div');
-      card.className = 'benefit-full-card';
-      card.innerHTML = `
-        <div class="benefit-icon-wrap"><span>${b.icono || '⭐'}</span></div>
-        <div class="benefit-full-info">
-          <div class="benefit-full-name">${b.titulo}</div>
-          <div class="benefit-full-biz">${b.negocio}</div>
-          <div class="benefit-full-pts">
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            ${b.puntosNecesarios} puntos
-          </div>
-        </div>
-        <div class="benefit-cta">
-          <button class="btn-canjear" style="${!canCanjear ? 'opacity:0.3;pointer-events:none' : ''}"
-            onclick="canjearBeneficio('${b.id}','${b.titulo}','${b.negocio}',${b.puntosNecesarios})">
-            Canjear
-          </button>
-        </div>`;
-      container.appendChild(card);
+    const docs = [];
+    snap.forEach(d => { if (d.data().activo) docs.push({ id: d.id, ...d.data() }); });
+    // Ordenar: primero los que puede canjear, luego por proximidad
+    docs.sort((a, b) => {
+      const aPuede = pts >= a.puntosNecesarios;
+      const bPuede = pts >= b.puntosNecesarios;
+      if (aPuede && !bPuede) return -1;
+      if (!aPuede && bPuede) return 1;
+      return (a.puntosNecesarios - pts) - (b.puntosNecesarios - pts);
+    });
+    docs.forEach(b => {
+      container.innerHTML += renderBeneficioConProgreso(b, pts);
     });
     document.getElementById('user-pts-header').textContent = `${pts} pts`;
   } catch(e) {}
@@ -2909,6 +2946,99 @@ async function loadUserData(user) {
     // Mostrar modal de bienvenida después de cargar
     setTimeout(() => showWelcomeModal(data.nombre), 1500);
   }
+}
+
+
+
+// ======== PROGRESO Y PROXIMIDAD DE BENEFICIOS ========
+
+async function checkProximidadBeneficios() {
+  if (!currentUserData) return;
+  try {
+    const snap = await getDocs(collection(db, 'beneficios'));
+    const pts = currentUserData?.puntos || 0;
+    let masProximo = null;
+    let menorDiferencia = Infinity;
+
+    snap.forEach(d => {
+      const b = { id: d.id, ...d.data() };
+      if (!b.activo) return;
+      const diff = b.puntosNecesarios - pts;
+      if (diff > 0 && diff < menorDiferencia) {
+        menorDiferencia = diff;
+        masProximo = b;
+      }
+    });
+
+    const alertEl = document.getElementById('proximity-alert');
+    const titleEl = document.getElementById('proximity-title');
+    const subEl = document.getElementById('proximity-sub');
+
+    if (masProximo) {
+      const pts_needed = masProximo.puntosNecesarios;
+      const porcentaje = Math.round((pts / pts_needed) * 100);
+
+      if (menorDiferencia <= 300) {
+        // Muy cerca — mostrar alerta
+        titleEl.textContent = `¡Te faltan solo ${menorDiferencia} puntos!`;
+        subEl.textContent = `${masProximo.icono || '⭐'} ${masProximo.titulo} en ${masProximo.negocio} — necesitás ${pts_needed} pts`;
+        alertEl.classList.add('show');
+      } else if (porcentaje >= 50) {
+        // Más del 50% del camino
+        titleEl.textContent = `Vas por buen camino 💪`;
+        subEl.textContent = `Te faltan ${menorDiferencia} pts para ${masProximo.titulo} en ${masProximo.negocio}`;
+        alertEl.classList.add('show');
+      } else {
+        alertEl.classList.remove('show');
+      }
+    } else if (snap.size > 0) {
+      // Tiene puntos suficientes para algún beneficio
+      titleEl.textContent = '¡Tenés puntos para canjear! 🎁';
+      subEl.textContent = 'Visitá la sección Beneficios y canjeá ahora';
+      alertEl.classList.add('show');
+    }
+  } catch(e) {}
+}
+
+// Agregar barra de progreso a cada beneficio en la lista completa
+function renderBeneficioConProgreso(b, pts) {
+  const ptsNecesarios = b.puntosNecesarios;
+  const porcentaje = Math.min(100, Math.round((pts / ptsNecesarios) * 100));
+  const diff = ptsNecesarios - pts;
+  const canCanjear = pts >= ptsNecesarios;
+  const esCerca = diff > 0 && diff <= 200;
+
+  return `
+    <div class="benefit-full-card">
+      <div class="benefit-icon-wrap"><span>${b.icono || '⭐'}</span></div>
+      <div class="benefit-full-info">
+        <div class="benefit-full-name">${b.titulo}</div>
+        <div class="benefit-full-biz">${b.negocio}</div>
+        <div class="benefit-full-pts">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          ${ptsNecesarios} puntos
+        </div>
+        <div class="benefit-progress-wrap">
+          <div class="benefit-progress-bar">
+            <div class="benefit-progress-fill" style="width:${porcentaje}%"></div>
+          </div>
+          <div class="benefit-progress-text ${esCerca ? 'close' : ''}">
+            ${canCanjear
+              ? '✓ ¡Podés canjearlo ahora!'
+              : esCerca
+                ? `¡Te faltan solo ${diff} puntos!`
+                : `${pts} / ${ptsNecesarios} pts · ${porcentaje}%`
+            }
+          </div>
+        </div>
+      </div>
+      <div class="benefit-cta">
+        <button class="btn-canjear" style="${!canCanjear ? 'opacity:0.3;pointer-events:none' : ''}"
+          onclick="canjearBeneficio('${b.id}','${b.titulo}','${b.negocio}',${ptsNecesarios})">
+          Canjear
+        </button>
+      </div>
+    </div>`;
 }
 
 
