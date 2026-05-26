@@ -1048,6 +1048,76 @@ html, body {
 }
 .proximity-alert-sub { font-size: 0.72rem; color: var(--gray-3); line-height: 1.4; }
 
+
+/* ======== RESEÑAS ======== */
+.resenas-section { margin-top: 8px; }
+
+.stars-display {
+  display: flex; gap: 3px; align-items: center;
+}
+.star {
+  width: 16px; height: 16px; color: var(--gold);
+  font-size: 16px; line-height: 1;
+}
+.star.empty { color: var(--gray-2); }
+
+.resena-card {
+  background: var(--black-3); border: 1px solid var(--gray-2);
+  border-radius: var(--radius-md); padding: 16px 18px;
+  margin-bottom: 10px;
+}
+.resena-header {
+  display: flex; justify-content: space-between;
+  align-items: flex-start; margin-bottom: 8px;
+}
+.resena-autor { font-size: 0.82rem; color: var(--white); font-weight: 500; }
+.resena-fecha { font-size: 0.68rem; color: var(--gray-3); }
+.resena-texto {
+  font-size: 0.82rem; color: var(--gray-3);
+  line-height: 1.6; margin-top: 6px;
+}
+.resena-promedio {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 16px; padding-bottom: 14px;
+  border-bottom: 1px solid var(--gray-2);
+}
+.resena-promedio-num {
+  font-family: var(--font-display); font-size: 2.8rem;
+  color: var(--gold); font-weight: 300; line-height: 1;
+}
+.resena-promedio-info { flex: 1; }
+.resena-total { font-size: 0.72rem; color: var(--gray-3); margin-top: 2px; }
+
+/* Formulario reseña */
+.stars-input {
+  display: flex; gap: 8px; margin-bottom: 16px;
+}
+.star-btn {
+  font-size: 2rem; cursor: pointer; transition: var(--transition);
+  color: var(--gray-2); background: none; border: none;
+  padding: 0; line-height: 1;
+}
+.star-btn.active { color: var(--gold); }
+.star-btn:active { transform: scale(1.2); }
+
+.resena-pendiente-badge {
+  font-size: 0.62rem; padding: 3px 8px; border-radius: 100px;
+  background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.3);
+  color: #fbbf24; margin-left: 8px;
+}
+.btn-moderar-ok {
+  padding: 6px 12px; background: transparent;
+  border: 1px solid rgba(74,222,128,0.4); border-radius: 100px;
+  color: #4ade80; font-size: 0.68rem; cursor: pointer;
+  transition: var(--transition); margin-right: 6px;
+}
+.btn-moderar-delete {
+  padding: 6px 12px; background: transparent;
+  border: 1px solid rgba(248,113,113,0.3); border-radius: 100px;
+  color: #f87171; font-size: 0.68rem; cursor: pointer;
+  transition: var(--transition);
+}
+
 </style>
 </head>
 <body>
@@ -1310,6 +1380,7 @@ html, body {
       <div class="admin-tab" data-panel="panel-beneficios">Beneficios</div>
       <div class="admin-tab" data-panel="panel-eventos">Eventos</div>
       <div class="admin-tab" data-panel="panel-usuarios">Usuarios</div>
+      <div class="admin-tab" data-panel="panel-resenas">Reseñas</div>
     </div>
 
     <!-- MÉTRICAS -->
@@ -1345,6 +1416,14 @@ html, body {
     <div class="admin-panel" id="panel-eventos">
       <button class="btn-admin-primary" onclick="openEventoForm()">+ Agregar evento</button>
       <div id="sa-eventos-list"></div>
+      <div style="height:20px"></div>
+    </div>
+
+    <!-- RESEÑAS -->
+    <div class="admin-panel" id="panel-resenas">
+      <div id="sa-resenas-list">
+        <div style="text-align:center;padding:20px"><div class="spinner"></div></div>
+      </div>
       <div style="height:20px"></div>
     </div>
 
@@ -1761,6 +1840,9 @@ function renderBusinessDetail(b) {
         ).join('')
       }</div></div>` : '';
 
+  // Cargar reseñas
+  const resenasContainerId = `resenas-${b.id}`;
+
   container.innerHTML = `
     ${coverHtml}
     <div class="business-detail-content" style="padding:24px">
@@ -2105,6 +2187,7 @@ document.querySelectorAll('.admin-tab').forEach(tab => {
       if (tab.dataset.panel === 'panel-beneficios') loadSABeneficios();
       if (tab.dataset.panel === 'panel-eventos') loadSAEventos();
       if (tab.dataset.panel === 'panel-usuarios') loadSAUsuarios();
+      if (tab.dataset.panel === 'panel-resenas') loadSAResenas();
       if (tab.dataset.panel === 'na-panel-codigos') loadNACodigos();
       if (tab.dataset.panel === 'na-panel-metricas') loadNAMetricas();
     }
@@ -3044,6 +3127,199 @@ function renderBeneficioConProgreso(b, pts) {
     </div>`;
 }
 
+
+
+// ======== SISTEMA DE RESEÑAS ========
+
+// ---- Render estrellas ----
+function renderStars(rating, size = 16) {
+  let html = '<div class="stars-display">';
+  for (let i = 1; i <= 5; i++) {
+    html += `<span class="star ${i <= rating ? '' : 'empty'}" style="font-size:${size}px">★</span>`;
+  }
+  html += '</div>';
+  return html;
+}
+
+// ---- Cargar reseñas de un negocio ----
+async function loadResenas(negocioId, container) {
+  try {
+    const q = query(
+      collection(db, 'resenas'),
+      where('negocioId', '==', negocioId),
+      where('estado', '==', 'aprobada')
+    );
+    const snap = await getDocs(q);
+
+    if (snap.empty) {
+      container.innerHTML = '<div style="font-size:0.82rem;color:var(--gray-3);text-align:center;padding:16px 0">Todavía no hay reseñas. ¡Sé el primero!</div>';
+      return { total: 0, promedio: 0 };
+    }
+
+    const resenas = [];
+    snap.forEach(d => resenas.push({ id: d.id, ...d.data() }));
+    resenas.sort((a, b) => (b.fecha?.seconds || 0) - (a.fecha?.seconds || 0));
+
+    const promedio = resenas.reduce((sum, r) => sum + r.estrellas, 0) / resenas.length;
+
+    container.innerHTML = `
+      <div class="resena-promedio">
+        <div class="resena-promedio-num">${promedio.toFixed(1)}</div>
+        <div class="resena-promedio-info">
+          ${renderStars(Math.round(promedio), 18)}
+          <div class="resena-total">${resenas.length} reseña${resenas.length !== 1 ? 's' : ''}</div>
+        </div>
+      </div>`;
+
+    resenas.forEach(r => {
+      const nombre = r.autorNombre || 'Cliente';
+      const inicial = nombre[0].toUpperCase();
+      container.innerHTML += `
+        <div class="resena-card">
+          <div class="resena-header">
+            <div>
+              <div class="resena-autor">${inicial}. ${nombre.split(' ')[0]}</div>
+              ${renderStars(r.estrellas, 13)}
+            </div>
+            <div class="resena-fecha">${formatDate(r.fecha)}</div>
+          </div>
+          ${r.texto ? `<div class="resena-texto">${r.texto}</div>` : ''}
+        </div>`;
+    });
+
+    return { total: resenas.length, promedio };
+  } catch(e) {
+    container.innerHTML = '';
+    return { total: 0, promedio: 0 };
+  }
+}
+
+// ---- Verificar si el usuario ya reseñó este negocio ----
+async function userYaReseno(negocioId) {
+  if (!currentUser) return false;
+  try {
+    const q = query(
+      collection(db, 'resenas'),
+      where('negocioId', '==', negocioId),
+      where('usuarioId', '==', currentUser.uid)
+    );
+    const snap = await getDocs(q);
+    return !snap.empty;
+  } catch(e) { return false; }
+}
+
+// ---- Formulario para dejar reseña ----
+async function mostrarFormReseña(negocioId, negocioNombre) {
+  if (!currentUser) { showToast('Iniciá sesión para dejar una reseña', 'error'); return; }
+
+  const yaReseno = await userYaReseno(negocioId);
+  if (yaReseno) { showToast('Ya dejaste una reseña para este negocio', ''); return; }
+
+  const content = document.getElementById('modal-content');
+  content.innerHTML = `
+    <div class="modal-title">Tu reseña</div>
+    <div class="modal-sub">${negocioNombre}</div>
+    <div style="margin-bottom:8px;font-size:0.72rem;color:var(--gray-3);letter-spacing:0.15em;text-transform:uppercase">Calificación</div>
+    <div class="stars-input" id="stars-input">
+      <button class="star-btn" data-val="1" onclick="selectStar(1)">★</button>
+      <button class="star-btn" data-val="2" onclick="selectStar(2)">★</button>
+      <button class="star-btn" data-val="3" onclick="selectStar(3)">★</button>
+      <button class="star-btn" data-val="4" onclick="selectStar(4)">★</button>
+      <button class="star-btn" data-val="5" onclick="selectStar(5)">★</button>
+    </div>
+    <div class="input-group">
+      <label>Comentario (opcional)</label>
+      <textarea id="resena-texto" rows="3" placeholder="Contá tu experiencia..." style="width:100%;padding:14px;background:var(--black-3);border:1px solid var(--gray-2);border-radius:var(--radius-sm);color:var(--white);font-family:var(--font-body);font-size:0.9rem;outline:none;resize:none"></textarea>
+    </div>
+    <button class="btn-admin-primary" onclick="enviarResena('${negocioId}','${negocioNombre}')">Enviar reseña</button>
+    <div style="height:4px"></div>`;
+
+  window._selectedStars = 0;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+window.selectStar = function(val) {
+  window._selectedStars = val;
+  document.querySelectorAll('.star-btn').forEach(btn => {
+    btn.classList.toggle('active', parseInt(btn.dataset.val) <= val);
+  });
+};
+
+window.enviarResena = async function(negocioId, negocioNombre) {
+  const estrellas = window._selectedStars || 0;
+  if (!estrellas) { showToast('Seleccioná una calificación', 'error'); return; }
+  const texto = document.getElementById('resena-texto').value.trim();
+  const nombre = currentUserData?.nombre || currentUser?.displayName || 'Cliente';
+
+  try {
+    await addDoc(collection(db, 'resenas'), {
+      negocioId, negocioNombre,
+      usuarioId: currentUser.uid,
+      autorNombre: nombre,
+      estrellas, texto,
+      estado: 'pendiente',
+      fecha: serverTimestamp()
+    });
+    closeModal();
+    showToast('¡Reseña enviada! Será visible tras la aprobación ✓', 'success');
+  } catch(e) { showToast('Error al enviar', 'error'); }
+};
+
+// ---- MODERACIÓN (superadmin) ----
+async function loadResenasPendientes() {
+  try {
+    const q = query(collection(db, 'resenas'), where('estado', '==', 'pendiente'));
+    const snap = await getDocs(q);
+    return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  } catch(e) { return []; }
+}
+
+window.aprobarResena = async function(id, containerId) {
+  try {
+    await updateDoc(doc(db, 'resenas', id), { estado: 'aprobada' });
+    showToast('Reseña aprobada ✓', 'success');
+    document.getElementById(containerId)?.remove();
+  } catch(e) { showToast('Error', 'error'); }
+};
+
+window.eliminarResena = async function(id, containerId) {
+  try {
+    const { deleteDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+    await deleteDoc(doc(db, 'resenas', id));
+    showToast('Reseña eliminada', 'success');
+    document.getElementById(containerId)?.remove();
+  } catch(e) { showToast('Error', 'error'); }
+};
+
+// ---- Cargar panel de moderación en superadmin ----
+async function loadSAResenas() {
+  const pendientes = await loadResenasPendientes();
+  const container = document.getElementById('sa-resenas-list');
+  if (!container) return;
+
+  if (pendientes.length === 0) {
+    container.innerHTML = '<div style="color:var(--gray-3);font-size:0.82rem;text-align:center;padding:20px">Sin reseñas pendientes</div>';
+    return;
+  }
+
+  container.innerHTML = '';
+  pendientes.forEach(r => {
+    const divId = `resena-${r.id}`;
+    container.innerHTML += `
+      <div class="admin-card" id="${divId}">
+        <div class="admin-card-header">
+          <div class="admin-card-title">${r.negocioNombre}</div>
+          ${renderStars(r.estrellas, 13)}
+        </div>
+        <div class="admin-card-sub">${r.autorNombre} · ${formatDate(r.fecha)}</div>
+        ${r.texto ? `<div style="font-size:0.82rem;color:var(--gray-3);margin-top:8px;line-height:1.5">"${r.texto}"</div>` : ''}
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <button class="btn-moderar-ok" onclick="aprobarResena('${r.id}','${divId}')">✓ Aprobar</button>
+          <button class="btn-moderar-delete" onclick="eliminarResena('${r.id}','${divId}')">✗ Eliminar</button>
+        </div>
+      </div>`;
+  });
+}
 
 // ---- PWA MANIFEST (inline) ----
 const manifest = {
