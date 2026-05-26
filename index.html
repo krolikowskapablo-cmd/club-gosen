@@ -9,6 +9,8 @@
 <meta name="apple-mobile-web-app-title" content="Club Gosén">
 <meta name="description" content="Club Gosén — Ecosistema de beneficios exclusivos">
 <link rel="manifest" href="#" id="manifest-link">
+<link rel="icon" type="image/png" href="https://res.cloudinary.com/deip81g0m/image/upload/v1779812999/logo_club_gosen_buczd6.png">
+<link rel="apple-touch-icon" href="https://res.cloudinary.com/deip81g0m/image/upload/v1779812999/logo_club_gosen_buczd6.png">
 <title>Club Gosén</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1052,6 +1054,7 @@ html, body {
 
 <!-- LOADING -->
 <div id="loading-screen">
+  <img src="https://res.cloudinary.com/deip81g0m/image/upload/v1779812999/logo_club_gosen_buczd6.png" style="width:90px;height:90px;border-radius:50%;margin-bottom:20px">
   <div class="loading-logo">Gosén</div>
   <div class="loading-sub">Club de beneficios</div>
   <div class="loading-bar"></div>
@@ -1062,7 +1065,7 @@ html, body {
 
 <!-- PWA BANNERS -->
 <div id="pwa-banner">
-  <div class="pwa-icon">G</div>
+  <div class="pwa-icon"><img src="https://res.cloudinary.com/deip81g0m/image/upload/v1779812999/logo_club_gosen_buczd6.png" style="width:100%;height:100%;object-fit:cover;border-radius:8px"></div>
   <div class="pwa-text">
     <strong>Instalar Club Gosén</strong>
     <span>Accedé más rápido desde tu pantalla</span>
@@ -3048,7 +3051,10 @@ const manifest = {
   description: 'Ecosistema de beneficios exclusivos',
   start_url: '/', display: 'standalone',
   background_color: '#0a0a0a', theme_color: '#0a0a0a',
-  icons: [{ src: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="%230a0a0a"/><text y=".9em" font-size="90" x="5">G</text></svg>', sizes: '192x192', type: 'image/svg+xml' }]
+  icons: [
+    { src: 'https://res.cloudinary.com/deip81g0m/image/upload/v1779812999/logo_club_gosen_buczd6.png', sizes: '192x192', type: 'image/png' },
+    { src: 'https://res.cloudinary.com/deip81g0m/image/upload/v1779812999/logo_club_gosen_buczd6.png', sizes: '512x512', type: 'image/png' }
+  ]
 };
 const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
 document.getElementById('manifest-link').href = URL.createObjectURL(blob);
