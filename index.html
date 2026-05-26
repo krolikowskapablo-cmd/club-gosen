@@ -1863,7 +1863,7 @@ function renderBusinessDetail(b) {
       '<div style="margin-top:28px">' +
         '<div class="detail-section-title" style="display:flex;align-items:center;justify-content:space-between">' +
           '<span>Reseñas</span>' +
-          '<button class="btn-outline" style="padding:7px 14px;font-size:0.68rem" onclick="mostrarFormReseña('' + b.id + '','' + b.nombre + '')">' +
+          '<button class="btn-outline" style="padding:7px 14px;font-size:0.68rem" onclick="mostrarFormResena('' + b.id + '','' + b.nombre + '')">' +
             '+ Dejar reseña' +
           '</button>' +
         '</div>' +
@@ -3224,7 +3224,7 @@ async function userYaReseno(negocioId) {
 }
 
 // ---- Formulario para dejar reseña ----
-async function mostrarFormReseña(negocioId, negocioNombre) {
+async function mostrarFormResena(negocioId, negocioNombre) {
   if (!currentUser) { showToast('Iniciá sesión para dejar una reseña', 'error'); return; }
 
   const yaReseno = await userYaReseno(negocioId);
