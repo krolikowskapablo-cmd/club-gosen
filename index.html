@@ -3028,8 +3028,36 @@ window.validarCodigo = async function() {
   const confirmBtn = document.getElementById('na-val-confirm-btn');
   currentValidacionCodigo = null;
   try {
+    // Buscar en codigos (WhatsApp) Y en canjes
     const q = query(collection(db, 'codigos'), where('codigo', '==', codigo));
-    const snap = await getDocs(q);
+    const q2 = query(collection(db, 'canjes'), where('codigo', '==', codigo));
+    const [snap, snap2] = await Promise.all([getDocs(q), getDocs(q2)]);
+    
+    // Si es un canje (CJE-XXXX)
+    if (!snap.empty === false && !snap2.empty) {
+      const cDoc = snap2.docs[0];
+      const canje = { id: cDoc.id, ...cDoc.data() };
+      if (canje.estado === 'usado') {
+        resultEl.className = 'validation-result error'; resultEl.style.display = 'block';
+        titleEl.textContent = '❌ Canje ya utilizado';
+        subEl.textContent = 'Este beneficio ya fue entregado';
+        confirmBtn.style.display = 'none'; return;
+      }
+      if (canje.estado === 'vencido') {
+        resultEl.className = 'validation-result error'; resultEl.style.display = 'block';
+        titleEl.textContent = '❌ Canje vencido';
+        subEl.textContent = 'Este código de canje ya expiró';
+        confirmBtn.style.display = 'none'; return;
+      }
+      // Canje válido
+      currentValidacionCodigo = { ...canje, _tipo: 'canje' };
+      resultEl.className = 'validation-result success'; resultEl.style.display = 'block';
+      titleEl.textContent = '✓ Canje válido';
+      subEl.textContent = canje.titulo + ' — ' + canje.negocio;
+      confirmBtn.textContent = 'Confirmar entrega del beneficio';
+      confirmBtn.style.display = 'block'; return;
+    }
+    
     if (snap.empty) {
       resultEl.className = 'validation-result error'; resultEl.style.display = 'block';
       titleEl.textContent = '❌ Código no encontrado';
@@ -3063,9 +3091,18 @@ window.validarCodigo = async function() {
 
 window.confirmarValidacion = async function() {
   if (!currentValidacionCodigo) return;
-  await procesarValidacion(currentValidacionCodigo.id, currentValidacionCodigo.usuarioId);
+  if (currentValidacionCodigo._tipo === 'canje') {
+    // Marcar canje como usado
+    try {
+      await updateDoc(doc(db, 'canjes', currentValidacionCodigo.id), { estado: 'usado' });
+      showToast('¡Beneficio entregado! Canje marcado como usado ✓', 'success');
+    } catch(e) { showToast('Error al procesar canje', 'error'); return; }
+  } else {
+    await procesarValidacion(currentValidacionCodigo.id, currentValidacionCodigo.usuarioId);
+  }
   document.getElementById('na-validation-result').style.display = 'none';
   document.getElementById('na-code-input').value = '';
+  document.getElementById('na-val-confirm-btn').textContent = 'Confirmar validación (+100 pts al cliente)';
   currentValidacionCodigo = null;
 };
 
